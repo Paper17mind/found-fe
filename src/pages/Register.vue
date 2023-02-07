@@ -32,16 +32,10 @@
         title="Data Periodik"
         icon="event_note"
       >
-        Try out different ad text to see what brings in the most customers, and
-        learn how to enhance your ads using features like ad extensions. If you
-        run into any problems with your ads, find out how to tell if they're
-        running and how to resolve approval issues.
+        <periodic :item="form" @change="form = $event" />
       </q-step>
       <q-step :name="4" :done="step > 4" title="Bayar Formulir" icon="payment">
-        Try out different ad text to see what brings in the most customers, and
-        learn how to enhance your ads using features like ad extensions. If you
-        run into any problems with your ads, find out how to tell if they're
-        running and how to resolve approval issues.
+        <payment-info />
       </q-step>
       <q-step :name="5" title="Berkas & Persetujuan" icon="assignment">
         Try out different ad text to see what brings in the most customers, and
@@ -74,15 +68,18 @@
 import { ref } from "vue";
 import Student from "src/components/Forms/Student.vue";
 import Parents from "src/components/Forms/Parents.vue";
+import Periodic from "src/components/Forms/Periodic.vue";
+import PaymentInfo from "src/components/Forms/PaymentInfo.vue";
 
 export default {
-  components: { Student, Parents },
+  components: { Student, Parents, Periodic, PaymentInfo },
   setup() {
     const form = ref({
       form_parent: {},
       student: {},
       periodic: {},
       scholarship: [],
+      source_info: [],
     });
     return {
       step: ref(1),
