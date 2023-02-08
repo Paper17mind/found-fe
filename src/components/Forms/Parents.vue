@@ -1,5 +1,5 @@
 <template>
-  <q-form ref="student">
+  <q-form ref="parent">
     <div class="row q-col-gutter-md">
       <div class="col-12 text-h5">Data Ayah Kandung (Wajib Diisi)</div>
       <!--  -->

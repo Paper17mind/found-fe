@@ -38,18 +38,64 @@
         <payment-info />
       </q-step>
       <q-step :name="5" title="Berkas & Persetujuan" icon="assignment">
-        Try out different ad text to see what brings in the most customers, and
-        learn how to enhance your ads using features like ad extensions. If you
-        run into any problems with your ads, find out how to tell if they're
-        running and how to resolve approval issues.
+        <div class="row q-col-gutter-sm">
+          <div class="col-12 col-md-6">
+            <h4 class="text-danger">Ketentuan Foto dan Berkas Siswa</h4>
+            <li>
+              Foto / dokumen yang disertakan harus jelas dan dapat terbaca
+              dengan baik
+            </li>
+            <li class="text-dark">
+              Untuk jenjang SD, foto siswa yang disertakan
+              <strong
+                >merupakan foto formal berukuran 3x4 berwarna dengan background
+                polos
+              </strong>
+            </li>
+            <li class="text-dark">
+              Untuk jenjang SMP dan SMA, foto siswa yang disertakan
+              <strong
+                >merupakan foto menggunakan seragam sekolah berukuran 3x4
+                berwarna
+              </strong>
+            </li>
+            <li class="text-dark">
+              Ukuran file <strong>maksimal 10 MB </strong>
+            </li>
+          </div>
+          <q-form class="col-12 col-md-6" ref="form-foto">
+            <q-file
+              class="q-mb-sm"
+              outlined
+              dense
+              label="Foto siswa *"
+            ></q-file>
+            <q-file
+              class="q-mb-sm"
+              outlined
+              dense
+              label="File Rapor *"
+            ></q-file>
+            <q-file
+              class="q-mb-sm"
+              outlined
+              dense
+              label="Bukti Transfer *"
+            ></q-file>
+            <q-checkbox
+              label="Saya menyatakan semua data yang disertakan adalah benar."
+            ></q-checkbox>
+            <q-btn color="primary" style="width: 100%" class="q-px-lg q-mt-md">
+              Daftar
+            </q-btn>
+          </q-form>
+        </div>
       </q-step>
       <template v-slot:navigation>
-        <q-stepper-navigation>
-          <q-btn
-            @click="$refs.stepper.next()"
-            color="primary"
-            :label="step === 3 ? 'Finish' : 'Continue'"
-          />
+        <q-stepper-navigation
+          style="width: 100%; display: flex"
+          class="q-mt-sm"
+        >
           <q-btn
             v-if="step > 1"
             flat
@@ -57,6 +103,13 @@
             @click="$refs.stepper.previous()"
             label="Back"
             class="q-ml-sm"
+          />
+          <q-space />
+          <q-btn
+            v-if="step < 5"
+            @click="$refs.stepper.next()"
+            color="primary"
+            :label="step === 5 ? 'Finish' : 'Continue'"
           />
         </q-stepper-navigation>
       </template>
@@ -82,7 +135,7 @@ export default {
       source_info: [],
     });
     return {
-      step: ref(1),
+      step: ref(5),
       form,
     };
   },

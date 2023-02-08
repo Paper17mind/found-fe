@@ -1,5 +1,5 @@
 <template>
-  <q-form ref="form">
+  <q-form ref="periodic">
     <div class="row q-col-gutter-md">
       <div class="col-12 text-h5">Sumber Info {{ school }}</div>
       <div class="col-12 col-md-3 text-caption">Tahu {{ school }} dari :</div>
