@@ -32,10 +32,10 @@
         title="Data Periodik"
         icon="event_note"
       >
-        <periodic :item="form" @change="form = $event" />
+        <periodic :item="form" @change="form = $event" :school="info.name" />
       </q-step>
       <q-step :name="4" :done="step > 4" title="Bayar Formulir" icon="payment">
-        <payment-info />
+        <payment-info :fee="info.fee" />
       </q-step>
       <q-step :name="5" title="Berkas & Persetujuan" icon="assignment">
         <div class="row q-col-gutter-sm">
@@ -118,15 +118,16 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import Student from "src/components/Forms/Student.vue";
 import Parents from "src/components/Forms/Parents.vue";
 import Periodic from "src/components/Forms/Periodic.vue";
 import PaymentInfo from "src/components/Forms/PaymentInfo.vue";
-
+import { useCommon } from "src/stores/storage";
 export default {
   components: { Student, Parents, Periodic, PaymentInfo },
   setup() {
+    const common = useCommon();
     const form = ref({
       form_parent: {},
       student: {},
@@ -134,9 +135,15 @@ export default {
       scholarship: [],
       source_info: [],
     });
+    const info = computed({
+      get: () => common.$state.info,
+      set: (v) => (common.$state.info = v),
+    });
+    onMounted(() => common.getInfo());
     return {
-      step: ref(5),
+      step: ref(1),
       form,
+      info,
     };
   },
 };

@@ -10,6 +10,7 @@
           outlined
           required
           dense
+          :options="info.periode"
           label="Pilih Tahun Pelajaran"
           v-model="form.periode"
         ></q-select>
@@ -20,9 +21,14 @@
         <q-select
           outlined
           dense
-          :options="levels"
+          :options="info.categories"
+          option-label="name"
+          option-value="name"
+          map-options
+          emit-value
           label="Pilih Jenjang"
           v-model="form.level"
+          @update:model-value="form.for_class = undefined"
         ></q-select>
       </div>
       <!--  -->
@@ -32,6 +38,10 @@
           outlined
           dense
           :options="classes"
+          option-label="name"
+          option-value="name"
+          map-options
+          emit-value
           label="Pilih Kelas"
           v-model="form.for_class"
         ></q-select>
@@ -125,7 +135,8 @@
           hint="Password digunakan untuk login nantinya"
         >
           <template #after>
-            <q-btn flat
+            <q-btn
+              flat
               :icon="show ? 'visibility' : 'visibility_off'"
               @click="show = !show"
               round
@@ -139,6 +150,8 @@
 </template>
 
 <script>
+import collect from "collect.js";
+import { useCommon } from "src/stores/storage";
 import { computed, defineComponent, ref } from "vue";
 
 export default defineComponent({
@@ -147,15 +160,32 @@ export default defineComponent({
   },
   emits: ["change"],
   setup(props, { emit }) {
+    const common = useCommon();
+    const info = computed({
+      get: () => common.$state.info,
+      set: (v) => (common.$state.info = v),
+    });
+    const form = computed({
+      get: () => props.item,
+      set: (v) => emit("change", v),
+    });
     return {
-      levels: ["SD", "SMP", "SMA"],
-      classes: ["SD I-VI", "SMP VII-IX", "SMA X-XII"],
+      info,
+      classes: computed({
+        get: () => {
+          const collection = collect(info.value.categories);
+          if (form.value.level) {
+            return collection
+              .where("name", "===", form.value.level)
+              .pluck("children")
+              .first();
+          }
+          return collection.pluck("children").flatten(1).toArray();
+        },
+      }),
       genders: ["Laki-laki", "Perempuan"],
       show: ref(false),
-      form: computed({
-        get: () => props.item,
-        set: (v) => emit("change", v),
-      }),
+      form,
     };
   },
 });

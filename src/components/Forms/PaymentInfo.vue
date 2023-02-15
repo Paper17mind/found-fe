@@ -42,9 +42,7 @@
                 <strong> {{ formatCurrency(fee) }} </strong>, ke salah satu
                 nomor rekening disamping
               </li>
-              <li>
-                Foto / scan / screenshoot bukti transfer anda
-              </li>
+              <li>Foto / scan / screenshoot bukti transfer anda</li>
               <li>
                 Simpan bukti transfer anda untuk diupload pada step berikutnya
               </li>
@@ -62,15 +60,16 @@ import { api } from "src/boot/axios";
 import collect from "collect.js";
 
 export default {
+  props: {
+    fee: {
+      type: Number,
+      default: 0,
+    },
+  },
   setup() {
     const data = ref([]);
-    const fee = ref(0);
     function getInfo() {
       api.get("bank_account").then((res) => (data.value = res.data?.data));
-      api.get("categories?type=fee").then((res) => {
-        const amount = collect(res.data.data).pluck("name").first();
-        fee.value = Number(amount);
-      });
     }
     function formatCurrency(number) {
       const formatter = new Intl.NumberFormat("id-ID", {
@@ -84,7 +83,6 @@ export default {
     onMounted(() => getInfo());
     return {
       data,
-      fee,
       formatCurrency,
     };
   },

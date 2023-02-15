@@ -16,13 +16,29 @@
       <div class="col-12 col-md-3 text-caption">Alumni ?*</div>
       <div class="col-12 col-md-9">
         <q-select
-          :options="['Ya', 'Tidak']"
+          :options="options"
+          option-label="text"
+          option-value="value"
+          emit-value
+          map-options
           label="Pilihan"
           dense
           outlined
           v-model="form.father_is_alumni"
         ></q-select>
       </div>
+      <template v-if="form.father_is_alumni">
+        <div class="col-12 col-md-3 text-caption">Tahun Lulus ?*</div>
+        <div class="col-12 col-md-9">
+          <q-select
+            :options="getPassYear(backYear)"
+            label="Tahun Lulus"
+            dense
+            outlined
+            v-model="form.father_passed"
+          ></q-select>
+        </div>
+      </template>
       <!--  -->
       <div class="col-12 text-h5 q-mt-md">Data Ibu Kandung (Wajib Diisi)</div>
       <div class="col-12 col-md-3 text-caption">Nama Ibu *</div>
@@ -38,13 +54,29 @@
       <div class="col-12 col-md-3 text-caption">Alumni ?*</div>
       <div class="col-12 col-md-9">
         <q-select
-          :options="['Ya', 'Tidak']"
+          :options="options"
+          option-label="text"
+          option-value="value"
+          emit-value
+          map-options
           label="Pilihan"
           dense
           outlined
           v-model="form.mother_is_alumni"
         ></q-select>
       </div>
+      <template v-if="form.mother_is_alumni">
+        <div class="col-12 col-md-3 text-caption">Tahun Lulus ?*</div>
+        <div class="col-12 col-md-9">
+          <q-select
+            :options="getPassYear(backYear)"
+            label="Tahun Lulus"
+            dense
+            outlined
+            v-model="form.mother_passed"
+          ></q-select>
+        </div>
+      </template>
       <!--  -->
       <div class="col-12 text-h5 q-mt-md">
         Data Wali (Opsional Bukan Ibu/Ayah)
@@ -62,13 +94,29 @@
       <div class="col-12 col-md-3 text-caption">Alumni ?</div>
       <div class="col-12 col-md-9">
         <q-select
-          :options="['Ya', 'Tidak']"
+          :options="options"
+          option-label="text"
+          option-value="value"
+          emit-value
+          map-options
           label="Pilihan"
           dense
           outlined
           v-model="form.guard_is_alumni"
         ></q-select>
       </div>
+      <template v-if="form.guard_is_alumni">
+        <div class="col-12 col-md-3 text-caption">Tahun Lulus ?*</div>
+        <div class="col-12 col-md-9">
+          <q-select
+            :options="getPassYear(backYear)"
+            label="Tahun Lulus"
+            dense
+            outlined
+            v-model="form.guard_passed"
+          ></q-select>
+        </div>
+      </template>
       <!--  -->
       <div class="col-12 text-h5 q-mt-md">Akun Sosial Media (Jika Ada)</div>
       <div class="col-12 col-md-3 text-caption">Tiktok</div>
@@ -93,17 +141,23 @@
 
 <script>
 import { computed, defineComponent, ref } from "vue";
-
+import { getPassYear } from "src/compose/utils";
 export default defineComponent({
   props: {
     item: Object,
+    backYear: {
+      type: Number,
+      default: 100,
+    },
   },
   emits: ["change"],
   setup(props, { emit }) {
     return {
-      levels: ["SD", "SMP", "SMA"],
-      classes: ["SD I-VI", "SMP VII-IX", "SMA X-XII"],
-      genders: ["Laki-laki", "Perempuan"],
+      options: [
+        { text: "Ya", value: 1 },
+        { text: "Tidak", value: 0 },
+      ],
+      getPassYear,
       show: ref(false),
       form: computed({
         get: () => props.item,
