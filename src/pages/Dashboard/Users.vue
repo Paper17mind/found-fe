@@ -6,6 +6,7 @@
       :rows="data"
       :loading="loading"
       :filter="search"
+      :rows-per-page-options="[0]"
       class="sticky-table"
       row-key="id"
       flat
@@ -14,37 +15,41 @@
       virtual-scroll
     >
       <template #top>
-        <q-bar flat>
-          <q-input v-model="search" label="Search..." rounded filled dense />
-          <q-space></q-space>
-          <q-btn
-            elevation="0"
-            color="primary"
-            dark
-            class="rounded-lg"
-            @click="dialog = true"
-          >
-            Tambah
-          </q-btn>
-        </q-bar>
+        <div style="width: 100%" flat class="row q-col-gutter-sm">
+          <q-input v-model="search" label="Search..." rounded outlined dense class="col-12 col-md-4" />
+          <div class="col-6 col-md-6"></div>
+          <div class="col-6 col-md-2 text-right">
+            <q-btn
+              elevation="0"
+              color="primary"
+              dark
+              class="rounded-lg"
+              @click="dialog = true"
+            >
+              Tambah
+            </q-btn>
+          </div>
+        </div>
       </template>
       <template #body-cell-actions="{ row }">
-        <q-btn-group rounded flat>
-          <q-btn
-            color="primary"
-            flat
-            round
-            icon="edit"
-            @click="editItem(row)"
-          />
-          <q-btn
-            color="red"
-            flat
-            round
-            @click="deleteItem(row)"
-            icon="delete"
-          />
-        </q-btn-group>
+        <q-td class="text-right">
+          <q-btn-group rounded flat>
+            <q-btn
+              color="primary"
+              flat
+              round
+              icon="edit"
+              @click="editItem(row)"
+            />
+            <q-btn
+              color="red"
+              flat
+              round
+              @click="deleteItem(row)"
+              icon="delete"
+            />
+          </q-btn-group>
+        </q-td>
       </template>
       <template #loading>
         <q-inner-loading showing color="primary" />
@@ -247,8 +252,7 @@ export default defineComponent({
       editedItem,
       //computed
       formTitle: computed({
-        get: () =>
-          editedIndex.value === -1 ? "Tambah Baru" : "Edit data",
+        get: () => (editedIndex.value === -1 ? "Tambah Baru" : "Edit data"),
       }),
       //methods
       save,

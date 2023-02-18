@@ -4,9 +4,11 @@ import { api } from "src/boot/axios";
 export const useCommon = defineStore("common", {
   state: () => ({
     counter: 0,
+    user: {},
+    token: null,
     info: {
       categories: [],
-      periode:[]
+      periode: [],
     },
   }),
   getters: {

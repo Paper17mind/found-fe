@@ -1,4 +1,5 @@
 import collect from "collect.js";
+import { api } from "src/boot/axios";
 
 export function getPassYear(back = 100) {
   const year = new Date().getFullYear();
@@ -23,7 +24,7 @@ export function usePeriode(semester = 6) {
       classes,
     };
   });
-  const lessons = ["Bhs Inggris", "IPA", "IPS", "Matematika"].map((x) => {
+  const lesson_values = ["Bhs Inggris", "IPA", "IPS", "Matematika"].map((x) => {
     const classes = {};
     for (let i = 0; i < semester / 2; i++) {
       classes[`${i + 1}`] = {
@@ -44,6 +45,35 @@ export function usePeriode(semester = 6) {
   });
   return {
     attendances,
-    lessons,
+    lesson_values,
   };
 }
+
+export const usePaginate = (
+  to,
+  ref,
+  page,
+  loading,
+  data,
+  link,
+  params = {}
+) => {
+  const lastIndex = data.value.length - 1;
+  const { next, last } = page.value;
+  if (!loading.value && next <= last && to === lastIndex) {
+    loading.value = true;
+    api
+      .get(link, {
+        params: {
+          page: page.value.next,
+          ...params,
+        },
+      })
+      .then((res) => {
+        page.value.next++;
+        data.value.push(...res.data.data);
+        ref.refresh();
+        loading.value = false;
+      });
+  }
+};

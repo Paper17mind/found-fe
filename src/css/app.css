@@ -1,1 +1,26 @@
 /* app global css */
+.sticky-table {
+  /* height or max-height is important */
+  height: 90vh;
+}
+
+.sticky-table.q-table__top,
+.q-table__bottom,
+thead tr:first-child th {
+  /* bg color is important for th; just specify one */
+  background-color: var(--q-positive);
+  color: var(--q-primary);
+}
+
+.sticky-table thead tr th {
+  position: sticky;
+  z-index: 1000;
+  color: var(--q-negative);
+  font-size: 10pt;
+  background-color: var(--q-positive);
+}
+
+.sticky-table thead tr:first-child th {
+  top: 0;
+}
+

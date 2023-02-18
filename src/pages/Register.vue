@@ -14,7 +14,11 @@
         icon="account_circle"
         :done="step > 1"
       >
-        <student :item="form.student" @change="form.student = $event" />
+        <student
+          :onNext="nextStep"
+          :item="form.student"
+          @change="form.student = $event"
+        />
       </q-step>
 
       <q-step
@@ -23,7 +27,12 @@
         icon="family_restroom"
         :done="step > 2"
       >
-        <parents :item="form.form_parent" @change="form.form_parent = $event" />
+        <parents
+          :onBack="onBack"
+          :onNext="nextStep"
+          :item="form.form_parent"
+          @change="form.form_parent = $event"
+        />
       </q-step>
 
       <q-step
@@ -32,10 +41,16 @@
         title="Data Periodik"
         icon="event_note"
       >
-        <periodic :item="form" @change="form = $event" :school="info.name" />
+        <periodic
+          :onBack="onBack"
+          :onNext="nextStep"
+          :item="form"
+          @change="form = $event"
+          :school="info.name"
+        />
       </q-step>
       <q-step :name="4" :done="step > 4" title="Bayar Formulir" icon="payment">
-        <payment-info :fee="info.fee" />
+        <payment-info :fee="info.fee" :onBack="onBack" :onNext="nextStep" />
       </q-step>
       <q-step :name="5" title="Berkas & Persetujuan" icon="assignment">
         <div class="row q-col-gutter-sm">
@@ -63,29 +78,46 @@
               Ukuran file <strong>maksimal 10 MB </strong>
             </li>
           </div>
-          <q-form class="col-12 col-md-6" ref="form-foto">
+          <q-form class="col-12 col-md-6" ref="formFoto">
             <q-file
               class="q-mb-sm"
               outlined
               dense
               label="Foto siswa *"
+              :rules="rules"
+              v-model="form.student_image"
+              hide-bottom-space
             ></q-file>
             <q-file
               class="q-mb-sm"
               outlined
               dense
               label="File Rapor *"
+              :rules="rules"
+              v-model="form.report_image"
+              hide-bottom-space
             ></q-file>
             <q-file
               class="q-mb-sm"
               outlined
               dense
               label="Bukti Transfer *"
+              :rules="rules"
+              v-model="form.transfer_image"
+              hide-bottom-space
             ></q-file>
             <q-checkbox
               label="Saya menyatakan semua data yang disertakan adalah benar."
+              :rules="rules"
+              hide-bottom-space
+              v-model="form.agreement"
             ></q-checkbox>
-            <q-btn color="primary" style="width: 100%" class="q-px-lg q-mt-md">
+            <q-btn
+              color="primary"
+              @click="submit"
+              style="width: 100%"
+              class="q-px-lg q-mt-md"
+            >
               Daftar
             </q-btn>
           </q-form>
@@ -97,20 +129,14 @@
           class="q-mt-sm"
         >
           <q-btn
-            v-if="step > 1"
+            v-if="step == 5"
             flat
             color="primary"
             @click="$refs.stepper.previous()"
-            label="Back"
+            label="Kembali"
             class="q-ml-sm"
           />
           <q-space />
-          <q-btn
-            v-if="step < 5"
-            @click="$refs.stepper.next()"
-            color="primary"
-            :label="step === 5 ? 'Finish' : 'Continue'"
-          />
         </q-stepper-navigation>
       </template>
     </q-stepper>
@@ -124,26 +150,79 @@ import Parents from "src/components/Forms/Parents.vue";
 import Periodic from "src/components/Forms/Periodic.vue";
 import PaymentInfo from "src/components/Forms/PaymentInfo.vue";
 import { useCommon } from "src/stores/storage";
+import { api } from "src/boot/axios";
+import { useQuasar } from "quasar";
+import { useRouter } from "vue-router";
 export default {
   components: { Student, Parents, Periodic, PaymentInfo },
   setup() {
     const common = useCommon();
+    const router = useRouter();
+    const q = useQuasar();
     const form = ref({
       form_parent: {},
       student: {},
       periodic: {},
-      scholarship: [],
+      scholarship: [{}],
       source_info: [],
+    });
+    const refs = ref({
+      student: {},
+      parent: {},
+      periodic: {},
+      files: {},
     });
     const info = computed({
       get: () => common.$state.info,
       set: (v) => (common.$state.info = v),
     });
+    const step = ref(1);
+    const formFoto = ref(null);
+    const loading = ref(false);
     onMounted(() => common.getInfo());
     return {
-      step: ref(1),
+      step,
+      refs,
       form,
       info,
+      formFoto,
+      rules: [(v) => !!v || "Mohon diisi"],
+      onBack: () => (step.value -= 1),
+      async nextStep(val) {
+        const v = await val;
+        if (v) step.value += 1;
+        else q.notify({ message: "Mohon lengkapi data", color: "red" });
+      },
+      async submit() {
+        const val = await formFoto.value.validate();
+        if (!val) return;
+        loading.value = true;
+        let fd = new FormData();
+        Object.keys(form.value).forEach((e) => {
+          if (e === "source_info") fd.append(e, JSON.stringify(form.value[e]));
+          else if (e === "scholarship") {
+            form.value.scholarship.forEach((sc, i) => {
+              if (sc.name) {
+                fd.append(`scholarship[${i}][name]`, sc.name);
+                fd.append(`scholarship[${i}][file]`, sc.file);
+              }
+            });
+          } else fd.append(e, form.value[e]);
+        });
+        fd.append("periode", form.value.student.periode);
+        const { data } = await api.post(`forms`, fd);
+        form.value.id = data.data?.id;
+        form.value.student.form_id = data.data?.id;
+        form.value.form_parent.form_id = data.data?.id;
+        form.value.periodic.form_id = data.data?.id;
+        await api.post("form_students", form.value.student);
+        await api.post("form_parents", form.value.form_parent);
+        await api.post("form_periodics", form.value.periodic);
+        // api.post("form_periodics", form.value.periodic);
+        loading.value = false;
+        q.notify({ message: "Registrasi berhasil dikirim" });
+        router.push("/");
+      },
     };
   },
 };

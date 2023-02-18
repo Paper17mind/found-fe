@@ -1,5 +1,5 @@
 <template>
-  <q-form ref="student">
+  <q-form ref="ref_student">
     <div class="row q-col-gutter-md">
       <!--  -->
       <div class="col-12 col-md-3 text-caption">
@@ -13,6 +13,8 @@
           :options="info.periode"
           label="Pilih Tahun Pelajaran"
           v-model="form.periode"
+          :rules="rules"
+          hide-bottom-space
         ></q-select>
       </div>
       <!--  -->
@@ -29,6 +31,8 @@
           label="Pilih Jenjang"
           v-model="form.level"
           @update:model-value="form.for_class = undefined"
+          :rules="rules"
+          hide-bottom-space
         ></q-select>
       </div>
       <!--  -->
@@ -44,6 +48,8 @@
           emit-value
           label="Pilih Kelas"
           v-model="form.for_class"
+          :rules="rules"
+          hide-bottom-space
         ></q-select>
       </div>
       <!--  -->
@@ -54,6 +60,8 @@
           dense
           outlined
           v-model="form.name"
+          :rules="rules"
+          hide-bottom-space
         ></q-input>
       </div>
       <!--  -->
@@ -65,12 +73,14 @@
           :options="genders"
           label="Jenis Kelamin"
           v-model="form.gender"
+          :rules="rules"
+          hide-bottom-space
         ></q-select>
       </div>
       <!--  -->
       <div class="col-6 col-md-3 text-caption">Kota Lahir *</div>
       <div class="col-6 col-md-4">
-        <q-input dense outlined v-model="form.city"></q-input>
+        <q-input dense outlined :rules="rules" v-model="form.city"></q-input>
       </div>
       <div class="col-6 col-md-2 text-caption">Tanggal Lahir *</div>
       <div class="col-6 col-md-3">
@@ -78,6 +88,8 @@
           dense
           outlined
           v-model="form.date_of_birth"
+          :rules="rules"
+          hide-bottom-space
           type="date"
         ></q-input>
       </div>
@@ -90,12 +102,19 @@
           dense
           hint="Alamat Lengkap,RT/RW, Kelurahan, Kecamatan, Kabupaten/Kota, Kode Pos"
           v-model="form.address"
+          :rules="rules"
+          hide-bottom-space
         />
       </div>
       <!--  -->
       <div class="col-12 col-md-3 text-caption">Asal Sekolah *</div>
       <div class="col-12 col-md-9">
-        <q-input dense outlined v-model="form.name"></q-input>
+        <q-input
+          :rules="rules"
+          dense
+          outlined
+          v-model="form.from_school"
+        ></q-input>
       </div>
       <!--  -->
       <div class="col-12 col-md-3 text-caption">NISN *</div>
@@ -110,6 +129,8 @@
           outlined
           v-model="form.phone"
           hint="No HP digunakan untuk informasi dan komunikasi sekolah, mohon isi dengan nomor yang aktif"
+          :rules="rules"
+          hide-bottom-space
         ></q-input>
       </div>
       <!--  -->
@@ -121,6 +142,8 @@
           dense
           outlined
           v-model="form.email"
+          :rules="rules"
+          hide-bottom-space
           hint="Mohon isi dengan email yang aktif"
         ></q-input>
       </div>
@@ -133,6 +156,8 @@
           :type="show ? 'text' : 'password'"
           v-model="form.password"
           hint="Password digunakan untuk login nantinya"
+          :rules="rules"
+          hide-bottom-space
         >
           <template #after>
             <q-btn
@@ -146,6 +171,15 @@
         </q-input>
       </div>
     </div>
+    <q-separator class="q-my-md" />
+    <div style="width: 100%; display: flex" class="q-mt-sm">
+      <q-space />
+      <q-btn
+        color="primary"
+        label="Selanjutnya"
+        @click="onNext($refs.ref_student.validate())"
+      />
+    </div>
   </q-form>
 </template>
 
@@ -157,6 +191,7 @@ import { computed, defineComponent, ref } from "vue";
 export default defineComponent({
   props: {
     item: Object,
+    onNext: Function,
   },
   emits: ["change"],
   setup(props, { emit }) {
@@ -185,6 +220,7 @@ export default defineComponent({
       }),
       genders: ["Laki-laki", "Perempuan"],
       show: ref(false),
+      rules: [(v) => !!v || "Mohon diisi"],
       form,
     };
   },

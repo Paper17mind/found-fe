@@ -5,7 +5,10 @@
       :columns="headers"
       :rows="data"
       :loading="loading"
-      :filter="search"
+      :rows-per-page-options="[0]"
+      @virtual-scroll="onScroll"
+      :virtual-scroll-item-size="48"
+      :virtual-scroll-sticky-size-start="48"
       class="sticky-table"
       row-key="id"
       flat
@@ -14,43 +17,90 @@
       virtual-scroll
     >
       <template #top>
-        <q-bar flat>
-          <q-input v-model="search" label="Search..." rounded filled dense />
-          <q-space></q-space>
-          <q-btn
-            elevation="0"
-            color="primary"
-            dark
-            class="rounded-lg"
-            @click="dialog = true"
-          >
-            New form_students
-          </q-btn>
-        </q-bar>
+        <div style="width: 100%" flat class="row q-col-gutter-sm">
+          <div class="col-12 col-md-5">
+            <q-input
+              v-model="filter.search"
+              label="Search..."
+              rounded
+              filled
+              debounce="500"
+              @update:model-value="initialize"
+              dense
+            />
+          </div>
+          <q-select
+            class="col-4 col-md-3"
+            rounded
+            filled
+            clearable
+            :options="status"
+            label="Filter Status"
+            v-model="filter.status"
+            @update:model-value="initialize"
+            dense
+          ></q-select>
+          <q-select
+            class="col-2"
+            rounded
+            filled
+            clearable
+            :options="periodes"
+            label="Filter Periode"
+            v-model="filter.periode"
+            @update:model-value="initialize"
+            dense
+          ></q-select>
+          <q-select
+            class="col-2"
+            rounded
+            filled
+            clearable
+            :options="['SD', 'SMP', 'SMA']"
+            label="Filter Jenjang"
+            v-model="filter.level"
+            @update:model-value="initialize"
+            dense
+          ></q-select>
+          <!-- <div class="col-6 col-md-5"></div> -->
+          <!--<div class="col-6 col-md-2 text-right">
+             <q-btn
+              elevation="0"
+              color="primary"
+              dark
+              class="rounded-lg"
+              @click="dialog = true"
+            >
+              New form_students
+            </q-btn>
+          </div>-->
+        </div>
       </template>
       <template #body-cell-actions="{ row }">
-        <q-btn-group rounded flat>
-          <q-btn
-            color="primary"
-            flat
-            round
-            icon="edit"
-            @click="editItem(row)"
-          />
-          <q-btn
-            color="red"
-            flat
-            round
-            @click="deleteItem(row)"
-            icon="delete"
-          />
-        </q-btn-group>
+        <q-td class="text-right">
+          <q-btn-group rounded flat>
+            <q-btn
+              color="primary"
+              flat
+              round
+              icon="edit"
+              @click="editItem(row)"
+            />
+            <q-btn
+              color="red"
+              flat
+              round
+              @click="deleteItem(row)"
+              icon="delete"
+            />
+          </q-btn-group>
+        </q-td>
       </template>
       <template #loading>
         <q-inner-loading showing color="primary" />
       </template>
     </q-table>
-    <q-dialog v-model="dialog" min-width="50vw" position="bottom">
+    <!-- <q-dialog v-model="dialog" min-width="50vw" position="bottom">
       <q-card flat>
         <q-card-section>
           <div class="text-h6">{{ formTitle }}</div>
@@ -233,86 +283,73 @@
           <q-btn color="success" flat @click="save"> Save </q-btn>
         </q-card-section>
       </q-card>
-    </q-dialog>
+    </q-dialog> -->
   </div>
 </template>
 
 <script>
 import { api } from "src/boot/axios";
 import { useQuasar } from "quasar";
-import {
-  computed,
-  defineComponent,
-  nextTick,
-  onMounted,
-  ref,
-} from "@vue/runtime-core";
+import { computed, defineComponent, onMounted, ref } from "@vue/runtime-core";
+import { usePaginate } from "src/compose/utils";
 export default defineComponent({
   setup() {
     const $q = useQuasar();
     const dialog = ref(false);
-    const search = ref(null);
     const loading = ref(false);
     const valid = ref(true);
     const headers = ref([
       {
-        label: "Periode",
-        name: "periode",
-        field: "periode",
-        sortable: true,
-        align: "left",
-      },
-      {
-        label: "Level",
-        name: "level",
-        field: "level",
-        sortable: true,
-        align: "left",
-      },
-      {
-        label: "ForClass",
-        name: "for_class",
-        field: "for_class",
-        sortable: true,
-        align: "left",
-      },
-      {
-        label: "Name",
+        label: "Nama",
         name: "name",
         field: "name",
         sortable: true,
         align: "left",
       },
       {
-        label: "Gender",
+        label: "Jenjang",
+        name: "level",
+        field: "level",
+        sortable: true,
+        align: "left",
+      },
+      {
+        label: "Kelas",
+        name: "for_class",
+        field: "for_class",
+        sortable: true,
+        align: "left",
+      },
+      {
+        label: "Jns Kelamin",
         name: "gender",
         field: "gender",
         sortable: true,
         align: "left",
       },
       {
-        label: "City",
-        name: "city",
-        field: "city",
-        sortable: true,
-        align: "left",
-      },
-      {
-        label: "DateOfBirth",
+        label: "Tgl Lahir",
         name: "date_of_birth",
         field: "date_of_birth",
         sortable: true,
         align: "left",
       },
       {
-        label: "Address",
+        label: "Kota",
+        name: "city",
+        field: "city",
+        sortable: true,
+        align: "left",
+      },
+      {
+        label: "Alamat",
         name: "address",
         field: "address",
         sortable: true,
         align: "left",
       },
       {
-        label: "FromSchool",
+        label: "Asal Sekolah",
         name: "from_school",
         field: "from_school",
         sortable: true,
@@ -326,7 +363,7 @@ export default defineComponent({
         align: "left",
       },
       {
-        label: "Phone",
+        label: "No Telp",
         name: "phone",
         field: "phone",
         sortable: true,
@@ -339,26 +376,15 @@ export default defineComponent({
         sortable: true,
         align: "left",
       },
-      {
-        label: "Password",
-        name: "password",
-        field: "password",
-        sortable: true,
-        align: "left",
-      },
-      {
-        label: "FormId",
-        name: "form_id",
-        field: "form_id",
-        sortable: true,
-        align: "left",
-      },
       { label: "Actions", name: "actions", field: "actions", align: "right" },
     ]);
     const rules = [(v) => !!v || "field is required"];
     const data = ref([]);
     const editedIndex = ref(-1);
     const editedItem = ref({});
+    const filter = ref({});
+    const periodes = ref([]);
+    const page = ref({});
     // methods
     function notif(title, color, e) {
       $q.notify({
@@ -371,12 +397,20 @@ export default defineComponent({
     function initialize() {
       loading.value = true;
       api
-        .get("/form_students")
+        .get("/form_students", { params: filter.value })
         .then((res) => {
           data.value = res.data.data;
           loading.value = false;
+          page.value = {
+            next: 2,
+            last: res.data.last_page,
+          };
         })
         .catch((e) => notif("Error :(", "red", e));
+
+      if (periodes.value.length == 0) {
+        api.get("periode").then((res) => (periodes.value = res.data));
+      }
     }
 
     function editItem(item) {
@@ -438,7 +472,6 @@ export default defineComponent({
     // response
     return {
       dialog,
-      search,
       loading,
       valid,
       headers,
@@ -446,6 +479,9 @@ export default defineComponent({
       data,
       editedIndex,
       editedItem,
+      filter,
+      page,
+      periodes,
       //computed
       formTitle: computed({
         get: () =>
@@ -454,10 +490,23 @@ export default defineComponent({
             : "Edit form_students",
       }),
       //methods
+      initialize,
       save,
       close,
       editItem,
       deleteItem,
+      onScroll({ to, ref }) {
+        console.log(to, ref);
+        usePaginate(
+          to,
+          ref,
+          page,
+          loading,
+          data,
+          "form_students",
+          filter.value
+        );
+      },
     };
   },
   watch: {

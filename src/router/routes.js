@@ -5,6 +5,7 @@ const routes = [
     children: [
       { path: "", component: () => import("pages/IndexPage.vue") },
       { path: "/register", component: () => import("pages/Register.vue") },
+      { path: "/login", component: () => import("pages/Login.vue") },
     ],
   },
   {
@@ -15,6 +16,10 @@ const routes = [
       {
         path: "/dashboard/registrar",
         component: () => import("pages/Dashboard/Registrar.vue"),
+      },
+      {
+        path: "/dashboard/registrar/:id",
+        component: () => import("pages/Dashboard/RegDetail.vue"),
       },
       {
         path: "/dashboard/students",

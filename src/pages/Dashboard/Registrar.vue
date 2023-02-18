@@ -5,8 +5,11 @@
       :columns="headers"
       :rows="data"
       :loading="loading"
-      :filter="search"
       class="sticky-table"
+      :rows-per-page-options="[0]"
+      @virtual-scroll="onScroll"
+      :virtual-scroll-item-size="48"
+      :virtual-scroll-sticky-size-start="48"
       row-key="id"
       flat
       dense
@@ -14,12 +17,41 @@
       virtual-scroll
     >
       <template #top>
-        <q-bar flat>
-          <div>Forms</div>
-          <q-separtor class="q-mx-md" vertical></q-separtor>
-          <q-input v-model="search" label="Search..." rounded filled dense />
-          <q-space></q-space>
-          <q-btn
+        <div flat class="row q-col-gutter-sm" style="width: 100%">
+          <div class="col-12 col-md-5">
+            <q-input
+              v-model="filter.search"
+              debounce="500"
+              @update:model-value="initialize"
+              label="Search..."
+              rounded
+              filled
+              dense
+            />
+          </div>
+          <q-select
+            class="col-2"
+            rounded
+            filled
+            clearable
+            :options="status"
+            label="Filter Status"
+            v-model="filter.status"
+            @update:model-value="initialize"
+            dense
+          ></q-select>
+          <q-select
+            class="col-2"
+            rounded
+            filled
+            clearable
+            :options="periodes"
+            label="Filter Periode"
+            v-model="filter.periode"
+            @update:model-value="initialize"
+            dense
+          ></q-select>
+          <!-- <q-btn
             elevation="0"
             color="primary"
             dark
@@ -27,26 +59,29 @@
             @click="dialog = true"
           >
             New forms
-          </q-btn>
-        </q-bar>
+          </q-btn> -->
+        </div>
       </template>
       <template #body-cell-actions="{ row }">
-        <q-btn-group rounded flat>
-          <q-btn
-            color="primary"
-            flat
-            round
-            icon="edit"
-            @click="editItem(row)"
-          />
-          <q-btn
-            color="red"
-            flat
-            round
-            @click="deleteItem(row)"
-            icon="delete"
-          />
-        </q-btn-group>
+        <q-td class="text-right">
+          <q-btn-group rounded flat>
+            <q-btn
+              color="primary"
+              flat
+              round
+              icon="info"
+              target="_blank"
+              :to="`/dashboard/registrar/${row.id}`"
+            />
+            <q-btn
+              color="red"
+              flat
+              round
+              @click="deleteItem(row)"
+              icon="delete"
+            />
+          </q-btn-group>
+        </q-td>
       </template>
       <template #loading>
         <q-inner-loading showing color="primary" />
@@ -59,25 +94,35 @@
 import { api } from "src/boot/axios";
 import { useQuasar } from "quasar";
 import { computed, defineComponent, onMounted, ref } from "@vue/runtime-core";
+import moment from "moment";
+import { usePaginate } from "src/compose/utils";
 export default defineComponent({
   setup() {
     const $q = useQuasar();
     const dialog = ref(false);
-    const search = ref(null);
     const loading = ref(false);
     const valid = ref(true);
+    const page = ref({});
     const headers = ref([
       {
-        label: "Status",
-        name: "status",
-        field: "status",
+        label: "Periode",
+        name: "periode",
+        field: "periode",
         sortable: true,
         align: "left",
       },
       {
-        label: "Approval",
-        name: "approval",
-        field: "approval",
+        label: "Tanggal",
+        name: "created_at",
+        field: "created_at",
+        sortable: true,
+        align: "left",
+        format: (v) => moment(v).format("ll"),
+      },
+      {
+        label: "Status",
+        name: "status",
+        field: "status",
         sortable: true,
         align: "left",
       },
@@ -108,6 +153,7 @@ export default defineComponent({
         field: "source_info",
         sortable: true,
         align: "left",
+        format: (v, r) => v?.join(","),
       },
       { label: "Actions", name: "actions", field: "actions", align: "right" },
     ]);
@@ -115,6 +161,8 @@ export default defineComponent({
     const data = ref([]);
     const editedIndex = ref(-1);
     const editedItem = ref({});
+    const filter = ref({});
+    const periodes = ref([]);
     // methods
     function notif(title, color, e) {
       $q.notify({
@@ -127,12 +175,21 @@ export default defineComponent({
     function initialize() {
       loading.value = true;
       api
-        .get("/forms")
+        .get("/forms", {
+          params: filter.value,
+        })
         .then((res) => {
           data.value = res.data.data;
           loading.value = false;
+          page.value = {
+            next: 2,
+            last: res.data.last_page,
+          };
         })
         .catch((e) => notif("Error :(", "red", e));
+      if (periodes.value.length == 0) {
+        api.get("periode").then((res) => (periodes.value = res.data));
+      }
     }
 
     function editItem(item) {
@@ -190,11 +247,11 @@ export default defineComponent({
           .catch((e) => notif("Error", "red", e));
       }
     }
+
     onMounted(() => initialize());
     // response
     return {
       dialog,
-      search,
       loading,
       valid,
       headers,
@@ -202,15 +259,23 @@ export default defineComponent({
       data,
       editedIndex,
       editedItem,
+      filter,
+      periodes,
+      status: ["Menunggu Persetujuan", "Disetujui", "Ditolak"],
       //computed
       formTitle: computed({
         get: () => (editedIndex.value === -1 ? "Create forms" : "Edit forms"),
       }),
       //methods
+      initialize,
       save,
       close,
       editItem,
       deleteItem,
+      onScroll({ to, ref }) {
+        // console.log(to, ref);
+        usePaginate(to, ref, page, loading, data, "forms", filter.value);
+      },
     };
   },
   watch: {

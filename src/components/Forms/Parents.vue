@@ -5,12 +5,26 @@
       <!--  -->
       <div class="col-12 col-md-3 text-caption">Nama Ayah *</div>
       <div class="col-12 col-md-9">
-        <q-input outlined required dense v-model="form.father_name"></q-input>
+        <q-input
+          :rules="rules"
+          hide-bottom-space
+          outlined
+          required
+          dense
+          v-model="form.father_name"
+        ></q-input>
       </div>
       <!--  -->
       <div class="col-12 col-md-3 text-caption">No Handphone Ayah *</div>
       <div class="col-12 col-md-9">
-        <q-input outlined required dense v-model="form.father_phone"></q-input>
+        <q-input
+          :rules="rules"
+          hide-bottom-space
+          outlined
+          required
+          dense
+          v-model="form.father_phone"
+        ></q-input>
       </div>
       <!--  -->
       <div class="col-12 col-md-3 text-caption">Alumni ?*</div>
@@ -43,12 +57,26 @@
       <div class="col-12 text-h5 q-mt-md">Data Ibu Kandung (Wajib Diisi)</div>
       <div class="col-12 col-md-3 text-caption">Nama Ibu *</div>
       <div class="col-12 col-md-9">
-        <q-input outlined required dense v-model="form.mother_name"></q-input>
+        <q-input
+          :rules="rules"
+          hide-bottom-space
+          outlined
+          required
+          dense
+          v-model="form.mother_name"
+        ></q-input>
       </div>
       <!--  -->
       <div class="col-12 col-md-3 text-caption">No Handphone Ibu *</div>
       <div class="col-12 col-md-9">
-        <q-input outlined required dense v-model="form.mother_phone"></q-input>
+        <q-input
+          :rules="rules"
+          hide-bottom-space
+          outlined
+          required
+          dense
+          v-model="form.mother_phone"
+        ></q-input>
       </div>
       <!--  -->
       <div class="col-12 col-md-3 text-caption">Alumni ?*</div>
@@ -136,6 +164,16 @@
         <q-input outlined required dense v-model="form.facebook_url"></q-input>
       </div>
     </div>
+    <q-separator class="q-my-md" />
+    <div style="width: 100%; display: flex" class="q-mt-sm">
+      <q-btn color="warning" label="Kembali" flat @click="onBack" />
+      <q-space />
+      <q-btn
+        color="primary"
+        :label="step === 5 ? 'Submit' : 'Selanjutnya'"
+        @click="onNext($refs.parent.validate())"
+      />
+    </div>
   </q-form>
 </template>
 
@@ -145,6 +183,8 @@ import { getPassYear } from "src/compose/utils";
 export default defineComponent({
   props: {
     item: Object,
+    onNext: Function,
+    onBack: Function,
     backYear: {
       type: Number,
       default: 100,
@@ -163,6 +203,7 @@ export default defineComponent({
         get: () => props.item,
         set: (v) => emit("change", v),
       }),
+      rules: [(v) => !!v || "Mohon diisi"],
     };
   },
 });
