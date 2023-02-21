@@ -16,7 +16,14 @@
     >
       <template #top>
         <div style="width: 100%" flat class="row q-col-gutter-sm">
-          <q-input v-model="search" label="Search..." rounded outlined dense class="col-12 col-md-4" />
+          <q-input
+            v-model="search"
+            label="Search..."
+            rounded
+            outlined
+            dense
+            class="col-12 col-md-4"
+          />
           <div class="col-6 col-md-6"></div>
           <div class="col-6 col-md-2 text-right">
             <q-btn
@@ -30,6 +37,13 @@
             </q-btn>
           </div>
         </div>
+      </template>
+      <template #body-cell-profile="{ row }">
+        <q-td>
+          <q-avatar>
+            <q-img :src="row.profile"></q-img>
+          </q-avatar>
+        </q-td>
       </template>
       <template #body-cell-actions="{ row }">
         <q-td class="text-right">
@@ -97,8 +111,23 @@
               />
             </div>
             <div class="col-12">
+              <q-select
+                v-model="editedItem.role_id"
+                :options="permissions"
+                option-label="name"
+                option-value="id"
+                emit-value
+                map-options
+                hide-bottom-space
+                label="Role"
+                filled
+                rounded
+                dense
+              />
+            </div>
+            <div class="col-12">
               <q-file
-                v-model="editedItem.profile"
+                v-model="editedItem.file"
                 hide-bottom-space
                 label="Profile"
                 filled
@@ -137,9 +166,23 @@ export default defineComponent({
     const valid = ref(true);
     const headers = ref([
       {
+        label: "Profile",
+        name: "profile",
+        field: "profile",
+        sortable: true,
+        align: "left",
+      },
+      {
         label: "Nama",
         name: "name",
         field: "name",
+        sortable: true,
+        align: "left",
+      },
+      {
+        label: "Role",
+        name: "role",
+        field: "role",
         sortable: true,
         align: "left",
       },
@@ -160,6 +203,7 @@ export default defineComponent({
       { label: "Actions", name: "actions", field: "actions", align: "right" },
     ]);
     const rules = [(v) => !!v || "field is required"];
+    const permissions = ref([]);
     const data = ref([]);
     const editedIndex = ref(-1);
     const editedItem = ref({});
@@ -181,6 +225,9 @@ export default defineComponent({
           loading.value = false;
         })
         .catch((e) => notif("Error :(", "red", e));
+    }
+    function getPermission() {
+      api.get("permissions").then((res) => (permissions.value = res.data));
     }
 
     function editItem(item) {
@@ -221,8 +268,12 @@ export default defineComponent({
       loading.value = true;
       if (editedIndex.value > -1) {
         const id = editedItem.value.id;
+        const fd = new FormData();
+        Object.keys(editedItem.value).forEach((e) => {
+          fd.append(e, editedItem.value[e]);
+        });
         api
-          .put("/users/" + id, editedItem.value)
+          .post("/users/" + id, fd)
           .then((res) => {
             Object.assign(data.value[editedIndex.value], res.data.data);
             close();
@@ -230,7 +281,7 @@ export default defineComponent({
           .catch((e) => notif("Error", "red", e));
       } else {
         api
-          .post("/users", editedItem.value)
+          .post("/users", fd)
           .then((res) => {
             data.value.push(res.data.data);
             close();
@@ -238,7 +289,10 @@ export default defineComponent({
           .catch((e) => notif("Error", "red", e));
       }
     }
-    onMounted(() => initialize());
+    onMounted(() => {
+      initialize();
+      getPermission();
+    });
     // response
     return {
       dialog,
@@ -250,6 +304,7 @@ export default defineComponent({
       data,
       editedIndex,
       editedItem,
+      permissions,
       //computed
       formTitle: computed({
         get: () => (editedIndex.value === -1 ? "Tambah Baru" : "Edit data"),

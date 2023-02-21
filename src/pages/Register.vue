@@ -210,6 +210,7 @@ export default {
           } else fd.append(e, form.value[e]);
         });
         fd.append("periode", form.value.student.periode);
+        fd.append("amount", info.value.fee);
         const { data } = await api.post(`forms`, fd);
         form.value.id = data.data?.id;
         form.value.student.form_id = data.data?.id;

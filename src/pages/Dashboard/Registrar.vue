@@ -51,6 +51,17 @@
             @update:model-value="initialize"
             dense
           ></q-select>
+          <q-select
+            class="col-2"
+            rounded
+            filled
+            clearable
+            :options="['SD', 'SMP', 'SMA']"
+            label="Filter Jenjang"
+            v-model="filter.level"
+            @update:model-value="initialize"
+            dense
+          ></q-select>
           <!-- <q-btn
             elevation="0"
             color="primary"
@@ -61,6 +72,49 @@
             New forms
           </q-btn> -->
         </div>
+      </template>
+      <template #body-cell-student_image="{ row }">
+        <q-td align="center">
+          <q-btn
+            round
+            flat
+            dense
+            target="_blank"
+            :href="row.student_image || undefined"
+            :icon="
+              row.student_image ? 'download_for_offline' : 'file_download_off'
+            "
+          ></q-btn>
+        </q-td>
+      </template>
+      <template #body-cell-transfer_image="{ row }">
+        <q-td align="center">
+          <q-btn
+            flat
+            round
+            dense
+            class="q-mx-auto"
+            target="_blank"
+            :href="row.transfer_image || undefined"
+            :icon="
+              row.transfer_image ? 'download_for_offline' : 'file_download_off'
+            "
+          ></q-btn>
+        </q-td>
+      </template>
+      <template #body-cell-report_image="{ row }">
+        <q-td align="center">
+          <q-btn
+            flat
+            round
+            dense
+            target="_blank"
+            :href="row.report_image || undefined"
+            :icon="
+              row.report_image ? 'download_for_offline' : 'file_download_off'
+            "
+          ></q-btn>
+        </q-td>
       </template>
       <template #body-cell-actions="{ row }">
         <q-td class="text-right">
@@ -127,25 +181,25 @@ export default defineComponent({
         align: "left",
       },
       {
-        label: "StudentImage",
+        label: "Foto Siswa",
         name: "student_image",
         field: "student_image",
         sortable: true,
-        align: "left",
+        align: "center",
       },
       {
-        label: "ReportImage",
+        label: "Foto Rapor",
         name: "report_image",
         field: "report_image",
         sortable: true,
-        align: "left",
+        align: "center",
       },
       {
-        label: "TransferImage",
+        label: "Bukti Transfer",
         name: "transfer_image",
         field: "transfer_image",
         sortable: true,
-        align: "left",
+        align: "center",
       },
       {
         label: "SourceInfo",

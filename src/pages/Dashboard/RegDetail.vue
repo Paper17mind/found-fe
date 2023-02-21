@@ -8,7 +8,20 @@
         <q-item>
           <q-item-section>
             <q-item-label>Status</q-item-label>
-            <q-item-label>{{ data.status }}</q-item-label>
+            <!-- <q-item-label>{{ data.status }}</q-item-label> -->
+            <q-select
+              hint="Status Siswa"
+              dense
+              outlined
+              v-model="data.new_status"
+              :options="statuses"
+            >
+              <template #after>
+                <q-btn color="secondary" @click="putData" :loading="loading"
+                  >Simpan</q-btn
+                >
+              </template>
+            </q-select>
           </q-item-section>
         </q-item>
         <q-item>
@@ -34,7 +47,9 @@
               <q-card-section class="q-px-none">
                 <q-img :src="data.student_image" />
               </q-card-section>
-              <q-card-section class="text-center text-bold"> Foto Siswa </q-card-section>
+              <q-card-section class="text-center text-bold">
+                Foto Siswa
+              </q-card-section>
             </q-card>
           </div>
           <div class="col-12 col-md-5">
@@ -42,7 +57,9 @@
               <q-card-section class="q-px-none">
                 <q-img :src="data.transfer_image" />
               </q-card-section>
-              <q-card-section class="text-center text-bold"> Bukti Transfer </q-card-section>
+              <q-card-section class="text-center text-bold">
+                Bukti Transfer
+              </q-card-section>
             </q-card>
           </div>
         </div>
@@ -320,16 +337,41 @@ export default {
       periodic: {},
       scholarship: [],
     });
+    const statuses = ref([
+      "Menunggu Persetujuan",
+      "Diterima",
+      "Ditolak",
+      "Diproses",
+    ]);
     const route = useRoute();
+    const loading = ref(false);
+
     function getData() {
+      loading.value = true;
       api.get("forms/" + route.params.id).then((res) => {
         data.value = res.data.data;
+        data.value.new_status = res.data.data?.status;
+        loading.value = false;
       });
+    }
+    function putData() {
+      loading.value = true;
+      api
+        .put("forms/" + route.params.id, {
+          status: data.value.new_status,
+          id: data.value.id,
+          approval: data.value.new_status === "Diterima",
+        })
+        .then((res) => getData());
     }
     onMounted(() => getData());
     return {
       data,
+      loading,
+      statuses,
       semester: computed({ get: () => getSemester(data.value.student.level) }),
+      putData,
+      getData,
     };
   },
 };

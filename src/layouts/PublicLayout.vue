@@ -3,8 +3,16 @@
     <q-header elevated>
       <q-toolbar>
         <q-toolbar-title> PPDB Online </q-toolbar-title>
-        <q-btn to="/register" flat stretch>Register</q-btn>
-        <q-btn to="/login" flat stretch>Login</q-btn>
+        <q-btn
+          v-for="x in menu"
+          :key="x.link"
+          :to="x.link"
+          flat
+          stretch
+          :class="{ 'bg-secondary': x.link === $route.path }"
+        >
+          {{ x.text }}
+        </q-btn>
       </q-toolbar>
     </q-header>
     <q-ajax-bar color="green"></q-ajax-bar>
@@ -15,11 +23,18 @@
   </q-layout>
 </template>
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent } from "vue";
 
 export default defineComponent({
-    setup() {
-
-    },
-})
+  setup() {
+    const menu = [
+      { text: "Daftar PPDB", link: "/register" },
+      { text: "Info", link: "/information" },
+      { text: "Login", link: "/login" },
+    ];
+    return {
+      menu,
+    };
+  },
+});
 </script>
