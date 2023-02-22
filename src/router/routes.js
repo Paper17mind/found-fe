@@ -30,6 +30,18 @@ const routes = [
         path: "/dashboard/users",
         component: () => import("pages/Dashboard/Users.vue"),
       },
+      {
+        path: "/dashboard/bank-account",
+        component: () => import("pages/Dashboard/BankAccount.vue"),
+      },
+      {
+        path: "/dashboard/settings",
+        component: () => import("pages/Dashboard/Settings.vue"),
+      },
+      {
+        path: "/dashboard/profile",
+        component: () => import("pages/Dashboard/Profile.vue"),
+      },
     ],
   },
 

@@ -3,15 +3,53 @@
     <q-header>
       <q-toolbar>
         <q-toolbar-title> PPDB Dashboard </q-toolbar-title>
-        <q-btn
-          flat
-          v-for="x in menu"
-          :key="x.link"
-          :to="x.link"
-          stretch
-          :class="{ 'bg-secondary': x.link === $route.path }"
-        >
-          {{ x.text }}
+        <template v-for="x in menu">
+          <q-btn-dropdown
+            flat
+            transition-show="jump-up"
+            transition-hide="jump-down"
+            v-if="x.submenu"
+            :label="x.text"
+            stretch
+          >
+            <q-item clickable v-for="y in x.submenu" :key="y.link" :to="y.link">
+              <q-item-section>
+                <q-item-label>{{ y.text }}</q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-btn-dropdown>
+          <q-btn
+            v-else
+            flat
+            :to="x.link"
+            stretch
+            :class="{ 'bg-secondary': x.link === $route.path }"
+          >
+            {{ x.text }}
+          </q-btn>
+        </template>
+        <q-btn round icon="people">
+          <q-menu>
+            <div>
+              <q-img
+                :src="user.profile"
+                style="width: 200px"
+                class="text-center"
+              >
+                <div class="q-mt-xl">{{ user.name }}</div>
+              </q-img>
+            </div>
+            <q-item clickable to="/dashboard/profile">
+              <q-item-section>
+                <q-item-label> Profile </q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item clickable @click="logout">
+              <q-item-section>
+                <q-item-label> Logout </q-item-label>
+              </q-item-section>
+            </q-item>
+          </q-menu>
         </q-btn>
       </q-toolbar>
     </q-header>
@@ -43,13 +81,32 @@ export default defineComponent({
       });
     }
     onBeforeMount(() => checkAuth());
+    function logout() {
+      const c = confirm("Yakin untuk keluar dari aplikasi ?");
+      if (!c) return;
+      api.get("auth/logout").then((res) => {
+        store.$state.user = {};
+        store.$state.token = null;
+        router.push("/login");
+      });
+    }
     return {
+      logout,
       leftDrawerOpen,
+      user: store.$state.user,
       menu: [
         { text: "Dashboard", link: "/dashboard" },
         { text: "Pendaftar", link: "/dashboard/registrar" },
         { text: "List Siswa", link: "/dashboard/students" },
         { text: "List User", link: "/dashboard/users" },
+        {
+          text: "Pengaturan",
+          link: undefined,
+          submenu: [
+            { text: "Akun Bank", link: "/dashboard/bank-account" },
+            { text: "Pengaturan Umum", link: "/dashboard/settings" },
+          ],
+        },
       ],
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;

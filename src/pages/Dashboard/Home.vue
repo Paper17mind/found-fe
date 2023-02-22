@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- <pre>{{ data }}</pre> -->
-    <div class="row q-col-gutter-sm">
+    <div class="row q-col-gutter-sm q-mt-xs q-px-sm">
       <div class="col-12 col-md-4" v-for="(x, title) in data" :key="title">
         <q-card bordered>
           <q-card-section class="text-bold">
@@ -16,6 +16,7 @@
             >
               <q-item-section>
                 <q-item-label> {{ y.status }} </q-item-label>
+                <q-item-label class="text-bold" caption> {{ price(y.total) }} </q-item-label>
               </q-item-section>
               <q-item-section side class="text-bold">
                 {{ y.count }}
@@ -31,6 +32,7 @@
 <script>
 import { defineComponent, onMounted, ref } from "@vue/runtime-core";
 import { api } from "src/boot/axios";
+import { price } from "src/compose/utils";
 
 export default defineComponent({
   setup() {
@@ -43,6 +45,7 @@ export default defineComponent({
     onMounted(() => getData());
     return {
       data,
+      price,
     };
   },
 });
