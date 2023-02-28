@@ -77,7 +77,7 @@ export default {
             store.$state.token = res.data.token;
             store.$state.user = res.data.user;
             q.loading.hide();
-            router.push("/dashboard");
+            router.push("/dashboard/profile");
           })
           .catch((e) => {
             q.loading.hide();

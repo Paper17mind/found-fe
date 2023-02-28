@@ -31,11 +31,16 @@
           :onBack="onBack"
           :onNext="nextStep"
           :item="form.form_parent"
+          :school="info.name"
+          :formBoarding="form.boarding_school_data"
+          @changeBoard="form.boarding_school_data = $event"
+          :isPesantren="form.student.level === 'Pesantren'"
           @change="form.form_parent = $event"
         />
       </q-step>
 
       <q-step
+        v-if="form.student.level !== 'Pesantren'"
         :name="3"
         :done="step > 3"
         title="Data Periodik"
@@ -49,10 +54,19 @@
           :school="info.name"
         />
       </q-step>
-      <q-step :name="4" :done="step > 4" title="Bayar Formulir" icon="payment">
+      <q-step
+        :name="form.student.level === 'Pesantren' ? 3 : 4"
+        :done="form.student.level === 'Pesantren' ? step > 3 : step > 4"
+        title="Bayar Formulir"
+        icon="payment"
+      >
         <payment-info :fee="info.fee" :onBack="onBack" :onNext="nextStep" />
       </q-step>
-      <q-step :name="5" title="Berkas & Persetujuan" icon="assignment">
+      <q-step
+        :name="form.student.level === 'Pesantren' ? 4 : 5"
+        title="Berkas & Persetujuan"
+        icon="assignment"
+      >
         <div class="row q-col-gutter-sm">
           <div class="col-12 col-md-6">
             <h4 class="text-danger">Ketentuan Foto dan Berkas Siswa</h4>
@@ -129,7 +143,7 @@
           class="q-mt-sm"
         >
           <q-btn
-            v-if="step == 5"
+            v-if="form.student.level === 'Pesantren' ? step == 4 : step == 5"
             flat
             color="primary"
             @click="$refs.stepper.previous()"
@@ -160,8 +174,17 @@ export default {
     const router = useRouter();
     const q = useQuasar();
     const form = ref({
-      form_parent: {},
-      student: {},
+      boarding_school_data: {
+        hope: "",
+        background: "",
+      },
+      form_parent: {
+        father_info: {},
+        mother_info: {},
+      },
+      student: {
+        boarding_school_data: {},
+      },
       periodic: {},
       scholarship: [{}],
       source_info: [],
@@ -179,6 +202,13 @@ export default {
     const step = ref(1);
     const formFoto = ref(null);
     const loading = ref(false);
+    function errNotif(e) {
+      q.notify({
+        message: e.response.data?.message,
+        color: "red",
+        position: "top",
+      });
+    }
     onMounted(() => common.getInfo());
     return {
       step,
@@ -190,17 +220,20 @@ export default {
       onBack: () => (step.value -= 1),
       async nextStep(val) {
         const v = await val;
-        if (v) step.value += 1;
-        else q.notify({ message: "Mohon lengkapi data", color: "red" });
+        // if (v) step.value += 1;
+        // else q.notify({ message: "Mohon lengkapi data", color: "red" });
+        step.value += 1;
       },
+
       async submit() {
         const val = await formFoto.value.validate();
         if (!val) return;
         loading.value = true;
         let fd = new FormData();
         Object.keys(form.value).forEach((e) => {
-          if (e === "source_info") fd.append(e, JSON.stringify(form.value[e]));
-          else if (e === "scholarship") {
+          if (["boarding_school_data", "source_info"].indexOf(e) > -1) {
+            fd.append(e, JSON.stringify(form.value[e]));
+          } else if (e === "scholarship") {
             form.value.scholarship.forEach((sc, i) => {
               if (sc.name) {
                 fd.append(`scholarship[${i}][name]`, sc.name);
@@ -211,14 +244,20 @@ export default {
         });
         fd.append("periode", form.value.student.periode);
         fd.append("amount", info.value.fee);
-        const { data } = await api.post(`forms`, fd);
+        const { data } = await api.post(`forms`, fd).catch((e) => errNotif(e));
         form.value.id = data.data?.id;
         form.value.student.form_id = data.data?.id;
         form.value.form_parent.form_id = data.data?.id;
         form.value.periodic.form_id = data.data?.id;
-        await api.post("form_students", form.value.student);
-        await api.post("form_parents", form.value.form_parent);
-        await api.post("form_periodics", form.value.periodic);
+        await api
+          .post("form_students", form.value.student)
+          .catch((e) => errNotif(e));
+        await api
+          .post("form_parents", form.value.form_parent)
+          .catch((e) => errNotif(e));
+        if (form.value.periodic.attendances) {
+          await api.post("form_periodics", form.value.periodic);
+        }
         // api.post("form_periodics", form.value.periodic);
         loading.value = false;
         q.notify({ message: "Registrasi berhasil dikirim" });

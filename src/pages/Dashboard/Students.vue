@@ -291,7 +291,7 @@
 import { api } from "src/boot/axios";
 import { useQuasar } from "quasar";
 import { computed, defineComponent, onMounted, ref } from "@vue/runtime-core";
-import { usePaginate } from "src/compose/utils";
+import { usePaginate, status } from "src/compose/utils";
 export default defineComponent({
   setup() {
     const $q = useQuasar();
@@ -482,6 +482,7 @@ export default defineComponent({
       filter,
       page,
       periodes,
+      status,
       //computed
       formTitle: computed({
         get: () =>

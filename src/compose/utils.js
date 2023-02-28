@@ -6,16 +6,24 @@ export function getPassYear(back = 100) {
   const result = Array.from({ length: back }, (v, i) => year - back + i + 1);
   return collect(result).sortByDesc().toArray();
 }
+
+export const status = [
+  "Belum Diverifikasi",
+  "Lulus Berkas",
+  "Tidak Lulus",
+];
+
 export function getSemester(level = "SMP") {
   if (level === "SMP") return ["VII", "VIII", "IX"];
   return ["X", "XI", "XII"];
 }
+
 export const price = (value, hide = false) => {
-  let val = (value / 1).toFixed(hide ? 0 : 2).replace('.', ',')
+  let val = (value / 1).toFixed(hide ? 0 : 2).replace(".", ",");
   return (
-    (hide ? '' : 'Rp.') + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-  )
-}
+    (hide ? "" : "Rp.") + val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+  );
+};
 export function usePeriode(semester = 6) {
   const attendances = ["Izin", "Sakit", "Alpha"].map((x) => {
     const classes = {};

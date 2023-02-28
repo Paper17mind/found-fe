@@ -63,7 +63,7 @@
 <script>
 import { api } from "src/boot/axios";
 import { useCommon } from "src/stores/storage";
-import { defineComponent, onBeforeMount, ref } from "vue";
+import { computed, defineComponent, onBeforeMount, ref } from "vue";
 import { useRouter } from "vue-router";
 
 export default defineComponent({
@@ -73,12 +73,27 @@ export default defineComponent({
     const leftDrawerOpen = ref(false);
     const store = useCommon();
     const router = useRouter();
+    const menu = computed({
+      get: () => store.$state.permissions,
+      set: (v) => (store.$state.permissions = v),
+    });
     function checkAuth() {
-      api.get("auth/user").catch((e) => {
-        store.$state.token = null;
-        store.$state.user = {};
-        router.push("/login");
-      });
+      api
+        .get("auth/user")
+        .catch((e) => {
+          store.$state.token = null;
+          store.$state.user = {};
+          router.push("/login");
+        })
+        .then(() => {
+          getPermission();
+          getLevel();
+        });
+    }
+    function getLevel() {
+      api
+        .get("categories?type=jenjang")
+        .then((res) => (store.$state.levels = res.data.data));
     }
     onBeforeMount(() => checkAuth());
     function logout() {
@@ -87,27 +102,20 @@ export default defineComponent({
       api.get("auth/logout").then((res) => {
         store.$state.user = {};
         store.$state.token = null;
+        store.$state.permissions = [];
         router.push("/login");
+      });
+    }
+    function getPermission() {
+      api.get("permission").then((res) => {
+        menu.value = res.data;
       });
     }
     return {
       logout,
       leftDrawerOpen,
       user: store.$state.user,
-      menu: [
-        { text: "Dashboard", link: "/dashboard" },
-        { text: "Pendaftar", link: "/dashboard/registrar" },
-        { text: "List Siswa", link: "/dashboard/students" },
-        { text: "List User", link: "/dashboard/users" },
-        {
-          text: "Pengaturan",
-          link: undefined,
-          submenu: [
-            { text: "Akun Bank", link: "/dashboard/bank-account" },
-            { text: "Pengaturan Umum", link: "/dashboard/settings" },
-          ],
-        },
-      ],
+      menu,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
       },

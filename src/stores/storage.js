@@ -5,6 +5,8 @@ export const useCommon = defineStore("common", {
   state: () => ({
     counter: 0,
     user: {},
+    levels: [],
+    permissions: [],
     token: null,
     info: {
       categories: [],

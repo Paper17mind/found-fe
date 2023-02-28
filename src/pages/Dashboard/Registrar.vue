@@ -149,7 +149,7 @@ import { api } from "src/boot/axios";
 import { useQuasar } from "quasar";
 import { computed, defineComponent, onMounted, ref } from "@vue/runtime-core";
 import moment from "moment";
-import { usePaginate } from "src/compose/utils";
+import { usePaginate, status } from "src/compose/utils";
 export default defineComponent({
   setup() {
     const $q = useQuasar();
@@ -159,9 +159,23 @@ export default defineComponent({
     const page = ref({});
     const headers = ref([
       {
-        label: "Periode",
+        label: "Thn Ajaran",
         name: "periode",
         field: "periode",
+        sortable: true,
+        align: "left",
+      },
+      {
+        label: "Nama Siswa",
+        name: "name",
+        field: "name",
+        sortable: true,
+        align: "left",
+      },
+      {
+        label: "Jenjang",
+        name: "level",
+        field: "level",
         sortable: true,
         align: "left",
       },
@@ -315,7 +329,7 @@ export default defineComponent({
       editedItem,
       filter,
       periodes,
-      status: ["Menunggu Persetujuan", "Disetujui", "Ditolak"],
+      status,
       //computed
       formTitle: computed({
         get: () => (editedIndex.value === -1 ? "Create forms" : "Edit forms"),

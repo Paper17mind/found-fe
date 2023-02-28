@@ -42,10 +42,9 @@ module.exports = configure(function (ctx) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-build
     build: {
-      vueRouterMode: "hash", // available values: 'hash', 'history'
-
+      vueRouterMode: "history", // available values: 'hash', 'history'
       // transpile: false,
-      // publicPath: '/',
+      publicPath: '/ppdb',
 
       // Add dependencies for transpiling with Babel (Array of string/regex)
       // (from node_modules, which are by default not transpiled).
@@ -87,10 +86,10 @@ module.exports = configure(function (ctx) {
     framework: {
       config: {
         brand: {
-          primary: "#2D2424",
-          secondary: "#5C3D2E",
-          warning: "#E0C097",
-          info: "#B85C38",
+          primary: "#005555",
+          secondary: "#069A8E",
+          warning: "#e6ad05",
+          info: "#A1E3D8",
           positive: "#FFFFFF",
           negative: "#000000",
           grey: "#efcfcf1a",

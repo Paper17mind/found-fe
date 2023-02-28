@@ -8,7 +8,11 @@ import { useCommon } from "src/stores/storage";
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
-const api = axios.create({ baseURL: "http://localhost:8000/api" });
+const api = axios.create({
+  baseURL: process.env.DEBUGGING
+    ? "http://localhost:8000/api"
+    : "https://dbiis.org/ppdb/backend/api",
+});
 
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api

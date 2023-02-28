@@ -17,18 +17,32 @@
               :options="statuses"
             >
               <template #after>
-                <q-btn color="secondary" @click="putData" :loading="loading"
-                  >Simpan</q-btn
-                >
+                <q-btn color="secondary" @click="putData" :loading="loading">
+                  Simpan
+                </q-btn>
               </template>
             </q-select>
           </q-item-section>
         </q-item>
-        <q-item>
+        <q-item v-if="data.student.level !== 'Pesantren'">
           <q-item-section>
             <q-item-label>Sumber Info</q-item-label>
             <q-item-label caption>
               {{ data.source_info?.join(", ") }}
+            </q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item v-else>
+          <q-item-section>
+            <q-item-label>Harapan dari pendidikan di sekolah</q-item-label>
+            <q-item-label caption>
+              {{ data.boarding_school_data?.hope }}
+            </q-item-label>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Latar belakang</q-item-label>
+            <q-item-label caption>
+              {{ data.boarding_school_data?.background }}
             </q-item-label>
           </q-item-section>
         </q-item>
@@ -80,7 +94,7 @@
             <q-item-label>Jenjang</q-item-label>
             <q-item-label caption>{{ data.student.level }}</q-item-label>
           </q-item-section>
-          <q-item-section>
+          <q-item-section v-if="data.student.level !== 'Pesantren'">
             <q-item-label>Kelas</q-item-label>
             <q-item-label caption>{{ data.student.for_class }}</q-item-label>
           </q-item-section>
@@ -89,12 +103,72 @@
             <q-item-label caption>{{ data.student.from_school }}</q-item-label>
           </q-item-section>
         </q-item>
+        <q-list dense v-if="data.student.level === 'Pesantren'">
+          <q-item>
+            <q-item-section>
+              <q-item-label>Alamat Sekolah</q-item-label>
+              <q-item-label caption>
+                {{ data.student.boarding_school_data?.school_address }}
+              </q-item-label>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Status Sekolah</q-item-label>
+              <q-item-label caption>
+                {{ data.student.boarding_school_data?.school_status }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+          <!--  -->
+          <q-item>
+            <q-item-section>
+              <q-item-label>Kewarganegaraan</q-item-label>
+              <q-item-label caption>
+                {{ data.student.boarding_school_data?.nationality }}
+              </q-item-label>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Bahasa Sehari-hari</q-item-label>
+              <q-item-label caption>
+                {{ data.student.boarding_school_data?.default_language }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item>
+            <q-item-section>
+              <q-item-label>Tinggi Badan</q-item-label>
+              <q-item-label caption>
+                {{ data.student.boarding_school_data?.height }} CM
+              </q-item-label>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Berat Badan</q-item-label>
+              <q-item-label caption>
+                {{ data.student.boarding_school_data?.weight }} KG
+              </q-item-label>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Golongan Darah</q-item-label>
+              <q-item-label caption>
+                {{ data.student.boarding_school_data?.blood }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item class="q-my-md">
+            <q-item-section>
+              <q-item-label></q-item-label>
+              <q-item-label>
+                Anak Ke {{ data.student.boarding_school_data?.child_no }} dari
+                {{ data.student.boarding_school_data?.from_child }} Bersaudara
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
         <q-item dense>
-          <q-item-section>
+          <q-item-section v-if="data.student.level !== 'Pesantren'">
             <q-item-label>NISN</q-item-label>
             <q-item-label caption>{{ data.student.nis }}</q-item-label>
           </q-item-section>
-          <q-item-section>
+          <q-item-section v-if="data.student.level !== 'Pesantren'">
             <q-item-label>Email</q-item-label>
             <q-item-label caption>{{ data.student.email }}</q-item-label>
           </q-item-section>
@@ -107,22 +181,68 @@
         </q-item>
         <q-item dense>
           <q-item-section>
-            <q-item-label>Kota</q-item-label>
-            <q-item-label caption>{{ data.student.city }}</q-item-label>
+            <q-item-label>Tempat Tanggal Lahir</q-item-label>
+            <q-item-label caption
+              >{{ data.student.city }}
+              {{ data.student.date_of_birth }}</q-item-label
+            >
           </q-item-section>
-          <q-item-section>
-            <q-item-label>Tanggal Lahir</q-item-label>
-            <q-item-label caption>
-              {{ data.student.date_of_birth }}
-            </q-item-label>
-          </q-item-section>
-        </q-item>
-        <q-item dense>
           <q-item-section>
             <q-item-label>Alamat Lengkap</q-item-label>
             <q-item-label caption>{{ data.student.address }}</q-item-label>
           </q-item-section>
         </q-item>
+        <q-list v-if="data.student.level === 'Pesantren'">
+          <div class="text-caption q-ml-md q-mt-md">Kegemaran</div>
+          <q-item>
+            <q-item-section>
+              <q-item-label>Olahraga</q-item-label>
+              <q-item-label caption>
+                {{ data.student.boarding_school_data?.sport_hobby }}
+              </q-item-label>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Kesenian</q-item-label>
+              <q-item-label caption>
+                {{ data.student.boarding_school_data?.art_hobby }}
+              </q-item-label>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Lainnya</q-item-label>
+              <q-item-label caption>
+                {{ data.student.boarding_school_data?.other_hobby }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+          <div class="text-caption q-ml-md q-mt-md">
+            Prestasi Yang Pernah Diraih
+          </div>
+          <q-item>
+            <q-item-section>
+              <q-item-label>Disekolah</q-item-label>
+              <q-item-label caption>
+                {{ data.student.boarding_school_data?.school_achievement }}
+              </q-item-label>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>Diluar Sekolah</q-item-label>
+              <q-item-label caption>
+                {{ data.student.boarding_school_data?.ex_school_achievement }}
+              </q-item-label>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label></q-item-label>
+              <q-item-label caption>
+                Dari
+                {{
+                  data.student.boarding_school_data?.from_achievement
+                }}
+                sebesar
+                {{ data.student.boarding_school_data?.amount_achievement }} / bulan
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-list>
       </q-timeline-entry>
       <q-timeline-entry title="Data Orang tua/wali">
         <q-item>
@@ -143,6 +263,36 @@
                   : "Bukan"
               }}
             </q-item-label>
+            <template v-if="data.student.level === 'Pesantren'">
+              <q-item-label>Alamat</q-item-label>
+              <q-item-label caption>
+                {{ data.form_parent.father_info?.address }}
+              </q-item-label>
+              <q-item-label>Tempat & Tgl Lahir</q-item-label>
+              <q-item-label caption>
+                {{ data.form_parent.father_info?.date_of_birth }}
+              </q-item-label>
+              <q-item-label>Kewarganegaraan</q-item-label>
+              <q-item-label caption>
+                {{ data.form_parent.father_info?.nationality }}
+              </q-item-label>
+              <q-item-label>Agama</q-item-label>
+              <q-item-label caption>
+                {{ data.form_parent.father_info?.religion }}
+              </q-item-label>
+              <q-item-label>Pendidikan</q-item-label>
+              <q-item-label caption>
+                {{ data.form_parent.father_info?.graduation }}
+              </q-item-label>
+              <q-item-label>Pekerjaan</q-item-label>
+              <q-item-label caption>
+                {{ data.form_parent.father_info?.job }}
+              </q-item-label>
+              <q-item-label>Penghasilan</q-item-label>
+              <q-item-label caption>
+                {{ data.form_parent.father_info?.sallary }}
+              </q-item-label>
+            </template>
           </q-item-section>
           <q-item-section>
             <q-item-label>Nama Ibu</q-item-label>
@@ -161,8 +311,38 @@
                   : "Bukan"
               }}
             </q-item-label>
+            <template v-if="data.student.level === 'Pesantren'">
+              <q-item-label>Alamat</q-item-label>
+              <q-item-label caption>
+                {{ data.form_parent.mother_info?.address }}
+              </q-item-label>
+              <q-item-label>Tempat & Tgl Lahir</q-item-label>
+              <q-item-label caption>
+                {{ data.form_parent.mother_info?.date_of_birth }}
+              </q-item-label>
+              <q-item-label>Kewarganegaraan</q-item-label>
+              <q-item-label caption>
+                {{ data.form_parent.mother_info?.nationality }}
+              </q-item-label>
+              <q-item-label>Agama</q-item-label>
+              <q-item-label caption>
+                {{ data.form_parent.mother_info?.religion }}
+              </q-item-label>
+              <q-item-label>Pendidikan</q-item-label>
+              <q-item-label caption>
+                {{ data.form_parent.mother_info?.graduation }}
+              </q-item-label>
+              <q-item-label>Pekerjaan</q-item-label>
+              <q-item-label caption>
+                {{ data.form_parent.mother_info?.job }}
+              </q-item-label>
+              <q-item-label>Penghasilan</q-item-label>
+              <q-item-label caption>
+                {{ data.form_parent.mother_info?.sallary }}
+              </q-item-label>
+            </template>
           </q-item-section>
-          <q-item-section>
+          <q-item-section v-if="data.student.level !== 'Pesantren'">
             <q-item-label>Nama Wali</q-item-label>
             <q-item-label caption>
               {{ data.form_parent.guard_name }}
@@ -181,7 +361,7 @@
             </q-item-label>
           </q-item-section>
         </q-item>
-        <q-item>
+        <q-item v-if="data.student.level !== 'Pesantren'">
           <q-item-section>
             <q-item-label>Link Tiktok</q-item-label>
             <q-item-label caption>
@@ -328,7 +508,7 @@ import { ref } from "@vue/reactivity";
 import { api } from "src/boot/axios";
 import { useRoute } from "vue-router";
 import { computed, onMounted } from "@vue/runtime-core";
-import { getSemester } from "src/compose/utils";
+import { getSemester, status } from "src/compose/utils";
 export default {
   setup() {
     const data = ref({
@@ -337,12 +517,7 @@ export default {
       periodic: {},
       scholarship: [],
     });
-    const statuses = ref([
-      "Menunggu Persetujuan",
-      "Diterima",
-      "Ditolak",
-      "Diproses",
-    ]);
+    const statuses = ref(status);
     const route = useRoute();
     const loading = ref(false);
 
