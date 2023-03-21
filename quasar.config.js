@@ -44,7 +44,7 @@ module.exports = configure(function (ctx) {
     build: {
       vueRouterMode: "history", // available values: 'hash', 'history'
       // transpile: false,
-      publicPath: '/ppdb',
+      publicPath: "/ppdb",
 
       // Add dependencies for transpiling with Babel (Array of string/regex)
       // (from node_modules, which are by default not transpiled).
@@ -107,7 +107,7 @@ module.exports = configure(function (ctx) {
       // directives: [],
 
       // Quasar plugins
-      plugins: ["Notify", "Loading", "LoadingBar"],
+      plugins: ["Notify", "Loading", "LoadingBar", "Dialog"],
     },
 
     // animations: 'all', // --- includes all animations

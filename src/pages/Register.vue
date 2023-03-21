@@ -220,9 +220,9 @@ export default {
       onBack: () => (step.value -= 1),
       async nextStep(val) {
         const v = await val;
-        // if (v) step.value += 1;
-        // else q.notify({ message: "Mohon lengkapi data", color: "red" });
-        step.value += 1;
+        if (v) step.value += 1;
+        else q.notify({ message: "Mohon lengkapi data", color: "red" });
+        // step.value += 1;
       },
 
       async submit() {

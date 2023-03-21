@@ -179,12 +179,13 @@ export default defineComponent({
     const common = useCommon();
     const semester = computed({
       get: () => {
-        return collect(common.$state.info.categories)
+        const dt = collect(common.$state.info.categories)
           .pluck("children")
           .flatten(1)
           .where("name", props.item.student.for_class)
           .pluck("semester")
           .first();
+        return Number(dt)
       },
     });
     const show = computed({

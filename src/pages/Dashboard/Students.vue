@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <q-table
@@ -56,7 +55,7 @@
             rounded
             filled
             clearable
-            :options="['SD', 'SMP', 'SMA']"
+            :options="['SD', 'SMP', 'SMA', 'Pesantren']"
             label="Filter Jenjang"
             v-model="filter.level"
             @update:model-value="initialize"
@@ -497,7 +496,6 @@ export default defineComponent({
       editItem,
       deleteItem,
       onScroll({ to, ref }) {
-        console.log(to, ref);
         usePaginate(
           to,
           ref,

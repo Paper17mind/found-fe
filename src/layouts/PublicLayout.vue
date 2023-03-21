@@ -18,15 +18,15 @@
         >
           {{ x.text }}
         </q-btn>
-        <q-btn v-if="!user.id" to="/login" flat stretch> Login </q-btn>
+        <!-- <q-btn v-if="!user.id" to="/login" flat stretch> Login </q-btn>
         <q-btn v-else icon="account_circle" :to="`/dashboard/profile`" flat stretch>
           <q-tooltip>
             <span>{{ user.name }}</span>
           </q-tooltip>
-        </q-btn>
+        </q-btn> -->
       </q-toolbar>
     </q-header>
-    <q-ajax-bar color="green"></q-ajax-bar>
+    <q-ajax-bar color="secondary"></q-ajax-bar>
 
     <q-page-container>
       <router-view />

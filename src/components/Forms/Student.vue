@@ -338,7 +338,7 @@
             hint="Mohon isi dengan email yang aktif"
           ></q-input>
         </div>
-        <!--  -->
+        <!--
         <div class="col-12 col-md-3 text-caption">Password Login *</div>
         <div class="col-12 col-md-9">
           <q-input
@@ -361,6 +361,7 @@
             </template>
           </q-input>
         </div>
+         -->
       </template>
     </div>
     <q-separator class="q-my-md" />
