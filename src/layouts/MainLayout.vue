@@ -103,7 +103,7 @@ export default defineComponent({
         store.$state.user = {};
         store.$state.token = null;
         store.$state.permissions = [];
-        router.push("/login");
+        router.push("/");
       });
     }
     function getPermission() {
