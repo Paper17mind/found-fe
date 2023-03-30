@@ -57,7 +57,10 @@
         </q-item>
         <div class="row q-col-gutter-sm justify-center q-mt-md">
           <div class="col-12 col-md-5">
-            <q-card>
+            <q-card
+              @click="preview(data.student_image)"
+              style="cursor: pointer"
+            >
               <q-card-section class="q-px-none">
                 <q-img :src="data.student_image" />
               </q-card-section>
@@ -67,7 +70,10 @@
             </q-card>
           </div>
           <div class="col-12 col-md-5">
-            <q-card>
+            <q-card
+              @click="preview(data.transfer_image)"
+              style="cursor: pointer"
+            >
               <q-card-section class="q-px-none">
                 <q-img :src="data.transfer_image" />
               </q-card-section>
@@ -168,7 +174,7 @@
             <q-item-label>NISN</q-item-label>
             <q-item-label caption>{{ data.student.nis }}</q-item-label>
           </q-item-section>
-          <q-item-section v-if="data.student.level !== 'Pesantren'">
+          <q-item-section>
             <q-item-label>Email</q-item-label>
             <q-item-label caption>{{ data.student.email }}</q-item-label>
           </q-item-section>
@@ -234,11 +240,10 @@
               <q-item-label></q-item-label>
               <q-item-label caption>
                 Dari
-                {{
-                  data.student.boarding_school_data?.from_achievement
-                }}
+                {{ data.student.boarding_school_data?.from_achievement }}
                 sebesar
-                {{ data.student.boarding_school_data?.amount_achievement }} / bulan
+                {{ data.student.boarding_school_data?.amount_achievement }} /
+                bulan
               </q-item-label>
             </q-item-section>
           </q-item>
@@ -365,25 +370,33 @@
           <q-item-section>
             <q-item-label>Link Tiktok</q-item-label>
             <q-item-label caption>
-              {{ data.form_parent.tiktok_url }}
+              <a :href="data.form_parent.tiktok_url" target="_blank">
+                {{ data.form_parent.tiktok_url }}
+              </a>
             </q-item-label>
           </q-item-section>
           <q-item-section>
             <q-item-label>Link Facebook</q-item-label>
             <q-item-label caption>
-              {{ data.form_parent.facebook_url }}
+              <a :href="data.form_parent.facebook_url" target="_blank">
+                {{ data.form_parent.facebook_url }}
+              </a>
             </q-item-label>
           </q-item-section>
           <q-item-section>
             <q-item-label>Link Instagram</q-item-label>
             <q-item-label caption>
-              {{ data.form_parent.instagram_url }}
+              <a :href="data.form_parent.instagram_url" target="_blank">
+                {{ data.form_parent.instagram_url }}
+              </a>
             </q-item-label>
           </q-item-section>
           <q-item-section>
             <q-item-label>Link Youtube</q-item-label>
             <q-item-label caption>
-              {{ data.form_parent.youtube_url }}
+              <a :href="data.form_parent.youtube_url" target="_blank">
+                {{ data.form_parent.youtube_url }}
+              </a>
             </q-item-label>
           </q-item-section>
         </q-item>
@@ -484,22 +497,23 @@
         subtitle="Untuk Program beasiswa"
       >
         <div class="row q-col-gutter-sm">
-          <q-card
-            v-for="x in data.scholarship"
-            :key="x.id"
-            class="col-6 col-md-4"
-          >
-            <q-card-section>
-              <q-img :src="x.document"></q-img>
-            </q-card-section>
-            <q-card-section>
-              {{ x.name }}
-            </q-card-section>
-          </q-card>
+          <div class="col-6 col-md-4" v-for="x in data.scholarship" :key="x.id">
+            <q-card>
+              <q-card-section>
+                <q-img :src="x.document"></q-img>
+              </q-card-section>
+              <q-card-section>
+                {{ x.name }}
+              </q-card-section>
+            </q-card>
+          </div>
         </div>
       </q-timeline-entry>
     </q-timeline>
     <!-- <pre> {{ data }} </pre> -->
+    <q-dialog v-model="dialog">
+      <q-img :src="image" style="max-height: 100vh" width="100%"></q-img>
+    </q-dialog>
   </div>
 </template>
 
@@ -520,6 +534,8 @@ export default {
     const statuses = ref(status);
     const route = useRoute();
     const loading = ref(false);
+    const dialog = ref(false);
+    const image = ref("");
 
     function getData() {
       loading.value = true;
@@ -544,6 +560,12 @@ export default {
       data,
       loading,
       statuses,
+      dialog,
+      image,
+      preview(img) {
+        image.value = img;
+        dialog.value = true;
+      },
       semester: computed({ get: () => getSemester(data.value.student.level) }),
       putData,
       getData,
@@ -552,5 +574,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

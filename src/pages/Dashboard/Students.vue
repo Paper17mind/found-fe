@@ -99,7 +99,7 @@
         <q-inner-loading showing color="primary" />
       </template>
     </q-table>
-    <!-- <q-dialog v-model="dialog" min-width="50vw" position="bottom">
+    <q-dialog v-model="dialog" min-width="50vw" position="bottom">
       <q-card flat>
         <q-card-section>
           <div class="text-h6">{{ formTitle }}</div>
@@ -107,36 +107,32 @@
         <q-card-section style="max-height: 50vh" class="scroll">
           <div class="row q-col-gutter-sm">
             <div class="col-12">
-              <q-input
-                v-model="editedItem.periode"
-                required
-                :rules="rules"
-                hide-bottom-space
-                label="Periode"
-                filled
-                rounded
-                dense
-              />
-            </div>
-            <div class="col-12">
-              <q-input
+              <q-select
                 v-model="editedItem.level"
-                required
+                :options="categories.filter((x) => x.type === 'jenjang')"
+                option-label="name"
+                option-value="name"
+                emit-value
                 :rules="rules"
+                map-options
                 hide-bottom-space
-                label="Level"
+                label="Jenjang"
                 filled
                 rounded
                 dense
               />
             </div>
-            <div class="col-12">
-              <q-input
+            <div class="col-12" v-if="editedItem.level !== 'pesantren'">
+              <q-select
                 v-model="editedItem.for_class"
-                required
+                :options="levels"
+                option-label="name"
+                option-value="name"
                 :rules="rules"
+                emit-value
+                map-options
                 hide-bottom-space
-                label="ForClass"
+                label="Kelas"
                 filled
                 rounded
                 dense
@@ -148,7 +144,7 @@
                 required
                 :rules="rules"
                 hide-bottom-space
-                label="Name"
+                label="Nama"
                 filled
                 rounded
                 dense
@@ -160,7 +156,7 @@
                 required
                 :rules="rules"
                 hide-bottom-space
-                label="Gender"
+                label="Jenis Kelamin"
                 filled
                 rounded
                 dense
@@ -172,7 +168,7 @@
                 required
                 :rules="rules"
                 hide-bottom-space
-                label="City"
+                label="Kota Kelahiran"
                 filled
                 rounded
                 dense
@@ -184,7 +180,7 @@
                 required
                 :rules="rules"
                 hide-bottom-space
-                label="DateOfBirth"
+                label="Tanggal Lahir"
                 filled
                 rounded
                 dense
@@ -196,7 +192,7 @@
                 required
                 :rules="rules"
                 hide-bottom-space
-                label="Address"
+                label="Alamat"
                 filled
                 rounded
                 dense
@@ -208,7 +204,7 @@
                 required
                 :rules="rules"
                 hide-bottom-space
-                label="FromSchool"
+                label="Asal Sekolah"
                 filled
                 rounded
                 dense
@@ -232,7 +228,7 @@
                 required
                 :rules="rules"
                 hide-bottom-space
-                label="Phone"
+                label="Npmor Telpon"
                 filled
                 rounded
                 dense
@@ -250,30 +246,6 @@
                 dense
               />
             </div>
-            <div class="col-12">
-              <q-input
-                v-model="editedItem.password"
-                required
-                :rules="rules"
-                hide-bottom-space
-                label="Password"
-                filled
-                rounded
-                dense
-              />
-            </div>
-            <div class="col-12">
-              <q-input
-                v-model="editedItem.form_id"
-                required
-                :rules="rules"
-                hide-bottom-space
-                label="FormId"
-                filled
-                rounded
-                dense
-              />
-            </div>
           </div>
         </q-card-section>
         <q-separator />
@@ -282,7 +254,7 @@
           <q-btn color="success" flat @click="save"> Save </q-btn>
         </q-card-section>
       </q-card>
-    </q-dialog> -->
+    </q-dialog>
   </div>
 </template>
 
@@ -291,6 +263,7 @@ import { api } from "src/boot/axios";
 import { useQuasar } from "quasar";
 import { computed, defineComponent, onMounted, ref } from "@vue/runtime-core";
 import { usePaginate, status } from "src/compose/utils";
+import collect from "collect.js";
 export default defineComponent({
   setup() {
     const $q = useQuasar();
@@ -379,6 +352,8 @@ export default defineComponent({
     ]);
     const rules = [(v) => !!v || "field is required"];
     const data = ref([]);
+    const categories = ref([]);
+    const levels = ref([]);
     const editedIndex = ref(-1);
     const editedItem = ref({});
     const filter = ref({});
@@ -391,6 +366,16 @@ export default defineComponent({
         caption: e.response && e.response.data ? e.response.data.message : e,
         color: color,
         position: "top-right",
+      });
+    }
+    function getCategories() {
+      api.get("info").then((res) => {
+        categories.value = res.data.categories;
+        levels.value = collect(categories.value)
+          .map((x) => x.children[0] ?? {})
+          .values()
+          .toArray();
+        console.log(levels);
       });
     }
     function initialize() {
@@ -467,10 +452,15 @@ export default defineComponent({
           .catch((e) => notif("Error", "red", e));
       }
     }
-    onMounted(() => initialize());
+    onMounted(() => {
+      initialize();
+      getCategories();
+    });
     // response
     return {
       dialog,
+      categories,
+      levels,
       loading,
       valid,
       headers,

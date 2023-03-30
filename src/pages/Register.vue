@@ -60,7 +60,12 @@
         title="Bayar Formulir"
         icon="payment"
       >
-        <payment-info :fee="info.fee" :onBack="onBack" :onNext="nextStep" />
+        <payment-info
+          :form="form.student"
+          :fee="info.fee"
+          :onBack="onBack"
+          :onNext="nextStep"
+        />
       </q-step>
       <q-step
         :name="form.student.level === 'Pesantren' ? 4 : 5"
@@ -188,6 +193,7 @@ export default {
       periodic: {},
       scholarship: [{}],
       source_info: [],
+      agreement:true
     });
     const refs = ref({
       student: {},
@@ -219,10 +225,10 @@ export default {
       rules: [(v) => !!v || "Mohon diisi"],
       onBack: () => (step.value -= 1),
       async nextStep(val) {
-        const v = await val;
-        if (v) step.value += 1;
-        else q.notify({ message: "Mohon lengkapi data", color: "red" });
-        // step.value += 1;
+        // const v = await val;
+        // if (v) step.value += 1;
+        // else q.notify({ message: "Mohon lengkapi data", color: "red" });
+        step.value += 1;
       },
 
       async submit() {

@@ -8,6 +8,7 @@ export const useCommon = defineStore("common", {
     levels: [],
     permissions: [],
     token: null,
+    va: {},
     info: {
       categories: [],
       periode: [],

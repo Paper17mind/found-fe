@@ -319,12 +319,11 @@
           outlined
           v-model="form.phone"
           hint="No HP digunakan untuk informasi dan komunikasi sekolah, mohon isi dengan nomor yang aktif"
-          :rules="rules"
-          hide-bottom-space
+          :rules="phone"
+          hide-bottom-space type="number"
         ></q-input>
       </div>
       <!--  -->
-      <template v-if="form.level !== 'Pesantren'">
         <div class="col-12 col-md-3 text-caption">
           Email Peserta Didik / Orang Tua *
         </div>
@@ -333,7 +332,7 @@
             dense
             outlined
             v-model="form.email"
-            :rules="rules"
+            :rules="email"
             hide-bottom-space
             hint="Mohon isi dengan email yang aktif"
           ></q-input>
@@ -362,7 +361,6 @@
           </q-input>
         </div>
          -->
-      </template>
     </div>
     <q-separator class="q-my-md" />
     <div style="width: 100%; display: flex" class="q-mt-sm">
@@ -414,6 +412,16 @@ export default defineComponent({
       genders: ["Laki-laki", "Perempuan"],
       show: ref(false),
       rules: [(v) => !!v || "Mohon diisi"],
+      phone: [
+        (v) => !!v || "Phone is required",
+        (v) =>
+          (v && v.match(/[0-9]/g) && v.length >= 6 && v.length <= 14) ||
+          "Phone is invalid",
+      ],
+      email: [
+        (v) => !!v || "E-mail is required",
+        (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+      ],
       form,
     };
   },

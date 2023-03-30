@@ -28,6 +28,38 @@
             </tbody>
           </table>
         </div>
+        <q-separator spaced="md" />
+        <q-item v-if="!vaInfo.va" dense class="q-px-none q-mt-md">
+          <q-item-section class="text-bold"> Atau </q-item-section>
+          <q-item-section side>
+            <q-btn @click="createVa" color="primary" outline no-caps>
+              Bayar dengan Virtual Akun
+            </q-btn>
+          </q-item-section>
+        </q-item>
+        <q-item v-else dense class="q-px-none">
+          <q-item-section>
+            <q-item-label caption>Id Transaksi</q-item-label>
+            <q-item-label class="text-bold">
+              {{ vaInfo.transactionId }}
+            </q-item-label>
+            <q-item-label caption>Nomor Virtual Account</q-item-label>
+            <q-item-label class="text-bold">
+              {{ vaInfo.va }}
+            </q-item-label>
+            <q-item-label caption>Metode pembayaran</q-item-label>
+            <q-item-label class="text-bold">
+              {{ vaInfo.paymentMethod }}
+            </q-item-label>
+          </q-item-section>
+          <q-item-section>
+            <q-item-label caption>Merchant</q-item-label>
+            <q-item-label class="text-bold">
+              {{ vaInfo.merchant?.name }}
+              <!-- ({{ vaInfo.merchant?.code }}) -->
+            </q-item-label>
+          </q-item-section>
+        </q-item>
       </div>
       <div class="col-12 col-md-6">
         <q-card bordered flat>
@@ -35,10 +67,10 @@
             <div>Total Nominal Yang Perlu dibayarkan</div>
             <div class="text-h5 q-my-md">{{ formatCurrency(fee) }}</div>
             <div>
-              Petunjuk pemelian formulir :
+              Petunjuk pembelian formulir :
               <ol>
                 <li>
-                  Silahkan melakukan pembelia formulir pendaftaran dengan cara
+                  Silahkan melakukan pembelian formulir pendaftaran dengan cara
                   melakukan transfer senilai
                   <strong> {{ formatCurrency(fee) }} </strong>, ke salah satu
                   nomor rekening disamping
@@ -70,18 +102,25 @@
 import { onMounted, ref } from "@vue/runtime-core";
 import { api } from "src/boot/axios";
 import collect from "collect.js";
+import { useCommon } from "src/stores/storage";
 
 export default {
   props: {
     onBack: Function,
     onNext: Function,
+    form: Object,
     fee: {
       type: Number,
       default: 0,
     },
   },
-  setup() {
+  setup(props) {
+    const common = useCommon();
     const data = ref([]);
+    const vaInfo = ref({
+      get: () => common.$state.va,
+      set: (v) => (common.$state.va = v),
+    });
     function getInfo() {
       api.get("bank_account").then((res) => (data.value = res.data?.data));
     }
@@ -93,15 +132,27 @@ export default {
       });
       return formatter.format(number);
     }
-
+    function createVa() {
+      api
+        .post("create-va", {
+          name: props.form.name,
+          phone: props.form.phone,
+          email: props.form.email,
+          level: props.form.level,
+        })
+        .then((res) => {
+          vaInfo.value = res.data?.data || {};
+        });
+    }
     onMounted(() => getInfo());
     return {
       data,
+      vaInfo,
+      createVa,
       formatCurrency,
     };
   },
 };
 </script>
 
-<style>
-</style>
+<style></style>
