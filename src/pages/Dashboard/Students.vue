@@ -83,7 +83,7 @@
               flat
               round
               icon="edit"
-              @click="editItem(row)"
+              :to="`/dashboard/registrar/${row.form_id}/edit`"
             />
             <q-btn
               color="red"
@@ -375,7 +375,6 @@ export default defineComponent({
           .map((x) => x.children[0] ?? {})
           .values()
           .toArray();
-        console.log(levels);
       });
     }
     function initialize() {

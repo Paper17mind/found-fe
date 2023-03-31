@@ -100,6 +100,7 @@
           map-options
           dense
           outlined
+          @update:model-value="initScholar"
         ></q-select>
       </div>
       <template v-if="form.beasiswa">
@@ -124,11 +125,11 @@
             />
           </div>
           <div class="col-2">
-            <q-btn-group v-if="!form.id" flat rounded>
+            <q-btn-group flat rounded>
               <q-btn
                 color="red"
-                :disable="i == 0"
-                @click="form.scholarship.splice(i, 1)"
+                :disable="form.scholarship?.length == 1"
+                @click="destroy(i)"
                 label="Hapus"
               >
                 <q-tooltip>Klik untuk menghapus prestasi</q-tooltip>
@@ -185,7 +186,7 @@ export default defineComponent({
           .where("name", props.item.student.for_class)
           .pluck("semester")
           .first();
-        return Number(dt)
+        return Number(dt);
       },
     });
     const show = computed({
@@ -222,10 +223,19 @@ export default defineComponent({
       ],
       selected: ref([]),
       form,
+      destroy(i) {
+        const c = confirm("Hapus item ini ?");
+        if (!c) return;
+        form.value.scholarship.splice(i, 1);
+      },
+      initScholar() {
+        if (form.value.scholarship?.length == 0) {
+          form.value.scholarship.push({});
+        }
+      },
     };
   },
 });
 </script>
 
-<style>
-</style>
+<style></style>

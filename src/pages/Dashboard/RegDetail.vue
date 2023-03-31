@@ -476,7 +476,7 @@
               <td class="text-bold q-px-sm">{{ x.type }}</td>
               <template v-for="y in x.classes">
                 <template v-for="(z, i) in y">
-                  <td>
+                  <td class="q-px-md">
                     <q-input
                       dense
                       suffix="Hari"

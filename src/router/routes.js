@@ -5,7 +5,10 @@ const routes = [
     children: [
       { path: "", component: () => import("pages/IndexPage.vue") },
       { path: "/register", component: () => import("pages/Register.vue") },
-      { path: "/information", component: () => import("pages/Information.vue") },
+      {
+        path: "/information",
+        component: () => import("pages/Information.vue"),
+      },
       { path: "/admin", component: () => import("pages/Login.vue") },
     ],
   },
@@ -21,6 +24,10 @@ const routes = [
       {
         path: "/dashboard/registrar/:id",
         component: () => import("pages/Dashboard/RegDetail.vue"),
+      },
+      {
+        path: "/dashboard/registrar/:id/edit",
+        component: () => import("pages/Dashboard/Register.vue"),
       },
       {
         path: "/dashboard/students",
