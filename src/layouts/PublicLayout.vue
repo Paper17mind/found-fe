@@ -1,13 +1,11 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header>
-      <q-toolbar>
-        <q-toolbar-title v-if="$route.path === '/register'">
-          Form Pendaftaran {{ info.name }}
-        </q-toolbar-title>
-        <q-toolbar-title v-else>
-          {{ info.name }}
-        </q-toolbar-title>
+      <q-toolbar class="q-pl-none">
+        <div class="q-px-sm">
+          <img :src="info.logo" style="height: 50px" />
+        </div>
+        <q-space />
         <q-btn
           v-for="x in menu"
           :key="x.link"
@@ -34,8 +32,10 @@
   </q-layout>
 </template>
 <script>
+import { createMetaMixin, useMeta } from "quasar";
 import { useCommon } from "src/stores/storage";
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, watch } from "vue";
+import { useRoute } from "vue-router";
 
 export default defineComponent({
   setup() {
@@ -44,11 +44,22 @@ export default defineComponent({
       { text: "Info", link: "/information" },
       // { text: "Login", link: "/login" },
     ];
+    const route = useRoute();
     const common = useCommon();
     const info = computed({
       get: () => common.$state.info,
       set: (v) => (common.$state.info = v),
     });
+    watch(
+      () => route.name,
+      () =>
+        useMeta({
+          title: `${route.name} ${info.value.name}`,
+        })
+    );
+    // useMeta({
+    //   title: `${route.name} ${info.value.name}`,
+    // });
     return {
       menu,
       info,

@@ -2,7 +2,10 @@
   <q-layout view="lHh Lpr lFf">
     <q-header>
       <q-toolbar>
-        <q-toolbar-title> PPDB Dashboard </q-toolbar-title>
+        <div class="q-px-sm">
+          <img :src="info.logo" style="height: 50px" />
+        </div>
+        <q-space />
         <template v-for="x in menu">
           <q-btn-dropdown
             flat
@@ -61,10 +64,18 @@
 </template>
 
 <script>
+import { useMeta } from "quasar";
 import { api } from "src/boot/axios";
 import { useCommon } from "src/stores/storage";
-import { computed, defineComponent, onBeforeMount, ref } from "vue";
-import { useRouter } from "vue-router";
+import {
+  computed,
+  defineComponent,
+  onBeforeMount,
+  onMounted,
+  ref,
+  watch,
+} from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 export default defineComponent({
   name: "MainLayout",
@@ -73,10 +84,20 @@ export default defineComponent({
     const leftDrawerOpen = ref(false);
     const store = useCommon();
     const router = useRouter();
+    const route = useRoute();
+
     const menu = computed({
       get: () => store.$state.permissions,
       set: (v) => (store.$state.permissions = v),
     });
+    const info = computed({
+      get: () => store.$state.info,
+      set: (v) => (store.$state.info = v),
+    });
+    watch(
+      () => route.name,
+      () => useMeta({ title: `${route.name} | ${info.value.name}` })
+    );
     function checkAuth() {
       api
         .get("auth/user")
@@ -95,6 +116,7 @@ export default defineComponent({
         .get("categories?type=jenjang")
         .then((res) => (store.$state.levels = res.data.data));
     }
+    onMounted(() => store.getInfo());
     onBeforeMount(() => checkAuth());
     function logout() {
       const c = confirm("Yakin untuk keluar dari aplikasi ?");
@@ -113,6 +135,7 @@ export default defineComponent({
     }
     return {
       logout,
+      info,
       leftDrawerOpen,
       user: store.$state.user,
       menu,
