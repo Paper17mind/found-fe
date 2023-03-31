@@ -99,7 +99,7 @@
 </template>
 
 <script>
-import { onMounted, ref } from "@vue/runtime-core";
+import { computed, onMounted, ref } from "@vue/runtime-core";
 import { api } from "src/boot/axios";
 import collect from "collect.js";
 import { useCommon } from "src/stores/storage";
@@ -117,7 +117,7 @@ export default {
   setup(props) {
     const common = useCommon();
     const data = ref([]);
-    const vaInfo = ref({
+    const vaInfo = computed({
       get: () => common.$state.va,
       set: (v) => (common.$state.va = v),
     });

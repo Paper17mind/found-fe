@@ -498,7 +498,7 @@
       >
         <div class="row q-col-gutter-sm">
           <div class="col-6 col-md-4" v-for="x in data.scholarship" :key="x.id">
-            <q-card>
+            <q-card @click="preview(x.document)">
               <q-card-section>
                 <q-img :src="x.document"></q-img>
               </q-card-section>
@@ -512,7 +512,7 @@
     </q-timeline>
     <!-- <pre> {{ data }} </pre> -->
     <q-dialog v-model="dialog">
-      <q-img :src="image" style="max-height: 100vh" width="100%"></q-img>
+      <img :src="image" style="max-height: 90vh">
     </q-dialog>
   </div>
 </template>

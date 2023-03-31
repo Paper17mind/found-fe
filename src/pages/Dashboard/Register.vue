@@ -185,7 +185,7 @@ export default {
       get: () => common.$state.info,
       set: (v) => (common.$state.info = v),
     });
-    const step = ref(4);
+    const step = ref(1);
     const formFoto = ref(null);
     const loading = ref(false);
     function errNotif(e) {

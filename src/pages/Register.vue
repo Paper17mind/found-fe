@@ -193,13 +193,17 @@ export default {
       periodic: {},
       scholarship: [{}],
       source_info: [],
-      agreement:true
+      agreement: true,
     });
     const refs = ref({
       student: {},
       parent: {},
       periodic: {},
       files: {},
+    });
+    const vaInfo = computed({
+      get: () => common.$state.va,
+      set: (v) => (common.$state.va = v),
     });
     const info = computed({
       get: () => common.$state.info,
@@ -225,10 +229,13 @@ export default {
       rules: [(v) => !!v || "Mohon diisi"],
       onBack: () => (step.value -= 1),
       async nextStep(val) {
-        // const v = await val;
-        // if (v) step.value += 1;
-        // else q.notify({ message: "Mohon lengkapi data", color: "red" });
-        step.value += 1;
+        if (process.env.DEBUGGING) {
+          step.value += 1;
+        } else {
+          const v = await val;
+          if (v) step.value += 1;
+          else q.notify({ message: "Mohon lengkapi data", color: "red" });
+        }
       },
 
       async submit() {
@@ -266,6 +273,7 @@ export default {
         }
         // api.post("form_periodics", form.value.periodic);
         loading.value = false;
+        vaInfo.value = {};
         q.notify({ message: "Registrasi berhasil dikirim" });
         router.push("/");
       },
