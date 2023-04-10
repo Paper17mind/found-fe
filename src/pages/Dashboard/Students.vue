@@ -272,6 +272,13 @@ export default defineComponent({
     const valid = ref(true);
     const headers = ref([
       {
+        label: "Kode",
+        name: "code",
+        field: "code",
+        sortable: false,
+        align: "left",
+      },
+      {
         label: "Nama",
         name: "name",
         field: "name",

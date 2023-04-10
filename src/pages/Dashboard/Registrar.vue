@@ -173,6 +173,13 @@ export default defineComponent({
         align: "left",
       },
       {
+        label: "Kode",
+        name: "code",
+        field: "code",
+        sortable: true,
+        align: "left",
+      },
+      {
         label: "Jenjang",
         name: "level",
         field: "level",

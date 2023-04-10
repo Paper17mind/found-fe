@@ -93,6 +93,13 @@ export default defineComponent({
         align: "left",
       },
       {
+        label: "Kode",
+        name: "code",
+        field: "code",
+        sortable: true,
+        align: "left",
+      },
+      {
         label: "Nama Siswa",
         name: "siswa",
         field: "siswa",
@@ -154,15 +161,7 @@ export default defineComponent({
       periodes,
       getData,
       onScroll({ to, ref }) {
-        usePaginate(
-          to,
-          ref,
-          page,
-          loading,
-          data,
-          "milestone",
-          filter.value
-        );
+        usePaginate(to, ref, page, loading, data, "milestone", filter.value);
       },
     };
   },
