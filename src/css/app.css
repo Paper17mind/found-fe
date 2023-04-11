@@ -4,6 +4,13 @@
   height: 90vh;
 }
 
+.q-px-sm {
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-top: 7px;
+    padding-bottom: 3px;
+}
+
 .sticky-table.q-table__top,
 .q-table__bottom,
 thead tr:first-child th {
