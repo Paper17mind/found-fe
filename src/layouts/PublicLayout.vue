@@ -3,7 +3,7 @@
     <q-header>
       <q-toolbar class="q-pl-none">
         <div class="q-px-sm m-3" href="https://dbiis.org">
-          <img :src="info.logo" style="height: 50px" />
+          <img :src="info.logo" style="height: 50px" href="https://dbiis.org/" />
         </div>
         <q-space />
         <q-btn
