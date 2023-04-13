@@ -2,9 +2,9 @@
   <q-layout view="lHh Lpr lFf">
     <q-header>
       <q-toolbar class="q-pl-none">
-        <div class="q-px-sm m-3" href="https://dbiis.org">
+        <a class="q-px-sm m-3" href="https://dbiis.org">
           <img :src="info.logo" style="height: 50px" href="https://dbiis.org/" />
-        </div>
+        </a>
         <q-space />
         <q-btn
           v-for="x in menu"

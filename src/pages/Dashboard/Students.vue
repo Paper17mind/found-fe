@@ -28,7 +28,8 @@
               dense
             />
           </div>
-          <q-select
+          <div class="col-4 col-md-3"></div>
+          <!-- <q-select
             class="col-4 col-md-3"
             rounded
             filled
@@ -38,7 +39,7 @@
             v-model="filter.status"
             @update:model-value="initialize"
             dense
-          ></q-select>
+          ></q-select> -->
           <q-select
             class="col-2"
             rounded
@@ -363,7 +364,9 @@ export default defineComponent({
     const levels = ref([]);
     const editedIndex = ref(-1);
     const editedItem = ref({});
-    const filter = ref({});
+    const filter = ref({
+      status: "Lulus Berkas",
+    });
     const periodes = ref([]);
     const page = ref({});
     // methods

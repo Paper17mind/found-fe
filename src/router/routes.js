@@ -14,6 +14,11 @@ const routes = [
         name: "Information",
         component: () => import("pages/Information.vue"),
       },
+      {
+        path: "/success-screen",
+        name: "Success",
+        component: () => import("pages/ThxPage.vue"),
+      },
       { path: "/admin", component: () => import("pages/Login.vue") },
       { path: "/login", component: () => import("pages/Login.vue") },
     ],

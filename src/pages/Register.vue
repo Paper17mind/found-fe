@@ -209,6 +209,10 @@ export default {
       get: () => common.$state.info,
       set: (v) => (common.$state.info = v),
     });
+    const student = computed({
+      get: () => common.$state.student,
+      set: (v) => (common.$state.student = v),
+    });
     const step = ref(1);
     const formFoto = ref(null);
     const loading = ref(false);
@@ -262,9 +266,10 @@ export default {
         form.value.student.form_id = data.data?.id;
         form.value.form_parent.form_id = data.data?.id;
         form.value.periodic.form_id = data.data?.id;
-        await api
+        const stdRes = await api
           .post("form_students", form.value.student)
           .catch((e) => errNotif(e));
+        student.value = stdRes.data.data;
         await api
           .post("form_parents", form.value.form_parent)
           .catch((e) => errNotif(e));
@@ -275,7 +280,7 @@ export default {
         loading.value = false;
         vaInfo.value = {};
         q.notify({ message: "Registrasi berhasil dikirim" });
-        router.push("/");
+        router.push("/success-screen");
       },
     };
   },
