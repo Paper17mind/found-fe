@@ -17,7 +17,7 @@
     >
       <template #top>
         <div flat class="row q-col-gutter-sm" style="width: 100%">
-          <div class="col-12 col-md-5">
+          <div class="col-12 col-md-4">
             <q-input
               v-model="filter.search"
               debounce="500"
@@ -28,6 +28,17 @@
               dense
             />
           </div>
+          <q-select
+            class="col-2"
+            rounded
+            filled
+            clearable
+            :options="['Sekolah', 'Pesantren']"
+            label="Filter Type"
+            v-model="filter.type"
+            @update:model-value="initialize"
+            dense
+          ></q-select>
           <q-select
             class="col-2"
             rounded
@@ -55,7 +66,7 @@
             rounded
             filled
             clearable
-            :options="['SD', 'SMP', 'SMA', 'Pesantren']"
+            :options="['SD', 'SMP', 'SMA']"
             label="Filter Jenjang"
             v-model="filter.level"
             @update:model-value="initialize"
@@ -180,11 +191,10 @@ export default defineComponent({
       },
       {
         label: "Sekolah/Pesantren",
-        name: "sop",
-        field: "sop",
+        name: "type",
+        field: "type",
         sortable: false,
         align: "left",
-        format: (v, r) => (r.level === "Pesantren" ? "Pesantren" : "Sekolah"),
       },
       {
         label: "Jenjang",
@@ -192,7 +202,6 @@ export default defineComponent({
         field: "level",
         sortable: true,
         align: "left",
-        format: (v, r) => (r.level === "Pesantren" ? "-" : v),
       },
       {
         label: "Tanggal",

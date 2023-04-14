@@ -34,42 +34,40 @@
           hide-bottom-space
         ></q-select>
       </div>
-      <template v-if="form.type === 'Sekolah'">
-        <div class="col-12 col-md-3 text-caption">Daftar Untuk Jenjang *</div>
-        <div class="col-12 col-md-9">
-          <q-select
-            outlined
-            dense
-            :options="info.categories.filter((x) => x.name !== 'Pesantren')"
-            option-label="name"
-            option-value="name"
-            map-options
-            emit-value
-            label="Pilih Jenjang"
-            v-model="form.level"
-            @update:model-value="form.for_class = undefined"
-            :rules="rules"
-            hide-bottom-space
-          ></q-select>
-        </div>
-        <!--  -->
-        <div class="col-12 col-md-3 text-caption">Daftar Untuk Kelas *</div>
-        <div class="col-12 col-md-9">
-          <q-select
-            outlined
-            dense
-            :options="classes"
-            option-label="name"
-            option-value="name"
-            map-options
-            emit-value
-            label="Pilih Kelas"
-            v-model="form.for_class"
-            :rules="rules"
-            hide-bottom-space
-          ></q-select>
-        </div>
-      </template>
+      <div class="col-12 col-md-3 text-caption">Daftar Untuk Jenjang *</div>
+      <div class="col-12 col-md-9">
+        <q-select
+          outlined
+          dense
+          :options="info.categories.filter((x) => x.name !== 'Pesantren')"
+          option-label="name"
+          option-value="name"
+          map-options
+          emit-value
+          label="Pilih Jenjang"
+          v-model="form.level"
+          @update:model-value="form.for_class = undefined"
+          :rules="rules"
+          hide-bottom-space
+        ></q-select>
+      </div>
+      <!--  -->
+      <div class="col-12 col-md-3 text-caption">Daftar Untuk Kelas *</div>
+      <div class="col-12 col-md-9">
+        <q-select
+          outlined
+          dense
+          :options="classes"
+          option-label="name"
+          option-value="name"
+          map-options
+          emit-value
+          label="Pilih Kelas"
+          v-model="form.for_class"
+          :rules="rules"
+          hide-bottom-space
+        ></q-select>
+      </div>
       <!--  -->
       <div class="col-12 col-md-3 text-caption">Nama Lengkap *</div>
       <div class="col-12 col-md-9">
@@ -125,7 +123,7 @@
         />
       </div>
       <!--  -->
-      <template v-if="form.level === 'Pesantren'">
+      <template v-if="form.type === 'Pesantren'">
         <div class="col-12 col-md-3 text-caption">Kewarganegaraan *</div>
         <div class="col-12 col-md-9">
           <q-input
@@ -310,23 +308,22 @@
         </div>
       </template>
       <!--  -->
-      <template v-if="form.level !== 'Pesantren'">
-        <div class="col-12 col-md-3 text-caption">Asal Sekolah *</div>
-        <div class="col-12 col-md-9">
-          <q-input
-            :rules="rules"
-            dense
-            outlined
-            v-model="form.from_school"
-            hide-bottom-space
-          ></q-input>
-        </div>
-        <!--  -->
-        <div class="col-12 col-md-3 text-caption">NISN *</div>
-        <div class="col-12 col-md-9">
-          <q-input dense outlined v-model="form.nis"></q-input>
-        </div>
-      </template>
+      <!-- <template v-if="form.type !== 'Pesantren'"> -->
+      <div class="col-12 col-md-3 text-caption">Asal Sekolah *</div>
+      <div class="col-12 col-md-9">
+        <q-input
+          dense
+          outlined
+          v-model="form.from_school"
+          hide-bottom-space
+        ></q-input>
+      </div>
+      <!--  -->
+      <div class="col-12 col-md-3 text-caption">NISN *</div>
+      <div class="col-12 col-md-9">
+        <q-input dense outlined v-model="form.nis"></q-input>
+      </div>
+      <!-- </template> -->
       <!--  -->
       <div class="col-12 col-md-3 text-caption">No Handphone *</div>
       <div class="col-12 col-md-9">

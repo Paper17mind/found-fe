@@ -108,11 +108,10 @@ export default defineComponent({
       },
       {
         label: "Sekolah/Pesantren",
-        name: "sop",
-        field: "sop",
+        name: "type",
+        field: "type",
         sortable: true,
         align: "left",
-        format: (v, r) => (r.level === "Pesantren" ? "Pesantren" : "Sekolah"),
       },
       {
         label: "Jenjang",
@@ -120,7 +119,6 @@ export default defineComponent({
         field: "level",
         sortable: true,
         align: "left",
-        format: (v, r) => (r.level === "Pesantren" ? "-" : v),
       },
       {
         label: "Kelas",
@@ -128,7 +126,6 @@ export default defineComponent({
         field: "class",
         sortable: true,
         align: "left",
-        format: (v, r) => (r.level === "Pesantren" ? "-" : v),
       },
       {
         label: "Status",

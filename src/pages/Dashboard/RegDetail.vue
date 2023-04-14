@@ -109,7 +109,7 @@
             <q-item-label caption>{{ data.student.from_school }}</q-item-label>
           </q-item-section>
         </q-item>
-        <q-list dense v-if="data.student.level === 'Pesantren'">
+        <q-list dense v-if="data.student.type === 'Pesantren'">
           <q-item>
             <q-item-section>
               <q-item-label>Alamat Sekolah</q-item-label>
@@ -198,7 +198,7 @@
             <q-item-label caption>{{ data.student.address }}</q-item-label>
           </q-item-section>
         </q-item>
-        <q-list v-if="data.student.level === 'Pesantren'">
+        <q-list v-if="data.student.type === 'Pesantren'">
           <div class="text-caption q-ml-md q-mt-md">Kegemaran</div>
           <q-item>
             <q-item-section>
@@ -268,7 +268,7 @@
                   : "Bukan"
               }}
             </q-item-label>
-            <template v-if="data.student.level === 'Pesantren'">
+            <template v-if="data.student.type === 'Pesantren'">
               <q-item-label>Alamat</q-item-label>
               <q-item-label caption>
                 {{ data.form_parent.father_info?.address }}
@@ -316,7 +316,7 @@
                   : "Bukan"
               }}
             </q-item-label>
-            <template v-if="data.student.level === 'Pesantren'">
+            <template v-if="data.student.type === 'Pesantren'">
               <q-item-label>Alamat</q-item-label>
               <q-item-label caption>
                 {{ data.form_parent.mother_info?.address }}
