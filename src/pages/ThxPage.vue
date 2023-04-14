@@ -13,7 +13,7 @@
             <tbody>
               <tr>
                 <td>Kode</td>
-                <td>: {{ info.nis }}{{ info.code }}</td>
+                <td>: {{ info.nis }}{{ info.form_id }}</td>
               </tr>
               <tr>
                 <td>Nama Siswa</td>

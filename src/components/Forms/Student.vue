@@ -18,25 +18,41 @@
         ></q-select>
       </div>
       <!--  -->
-      <div class="col-12 col-md-3 text-caption">Daftar Untuk Jenjang *</div>
+      <div class="col-12 col-md-3 text-caption">
+        Daftar Untuk Sekolah/Pesantren *
+      </div>
       <div class="col-12 col-md-9">
         <q-select
           outlined
           dense
-          :options="info.categories"
-          option-label="name"
-          option-value="name"
+          :options="['Sekolah', 'Pesantren']"
           map-options
           emit-value
-          label="Pilih Jenjang"
-          v-model="form.level"
-          @update:model-value="form.for_class = undefined"
+          v-model="form.type"
+          @update:model-value="onTypeChange"
           :rules="rules"
           hide-bottom-space
         ></q-select>
       </div>
-      <!--  -->
-      <template v-if="form.level !== 'Pesantren'">
+      <template v-if="form.type === 'Sekolah'">
+        <div class="col-12 col-md-3 text-caption">Daftar Untuk Jenjang *</div>
+        <div class="col-12 col-md-9">
+          <q-select
+            outlined
+            dense
+            :options="info.categories.filter((x) => x.name !== 'Pesantren')"
+            option-label="name"
+            option-value="name"
+            map-options
+            emit-value
+            label="Pilih Jenjang"
+            v-model="form.level"
+            @update:model-value="form.for_class = undefined"
+            :rules="rules"
+            hide-bottom-space
+          ></q-select>
+        </div>
+        <!--  -->
         <div class="col-12 col-md-3 text-caption">Daftar Untuk Kelas *</div>
         <div class="col-12 col-md-9">
           <q-select
@@ -320,24 +336,25 @@
           v-model="form.phone"
           hint="No HP digunakan untuk informasi dan komunikasi sekolah, mohon isi dengan nomor yang aktif"
           :rules="phone"
-          hide-bottom-space type="number"
+          hide-bottom-space
+          type="number"
         ></q-input>
       </div>
       <!--  -->
-        <div class="col-12 col-md-3 text-caption">
-          Email Peserta Didik / Orang Tua *
-        </div>
-        <div class="col-12 col-md-9">
-          <q-input
-            dense
-            outlined
-            v-model="form.email"
-            :rules="email"
-            hide-bottom-space
-            hint="Mohon isi dengan email yang aktif"
-          ></q-input>
-        </div>
-        <!--
+      <div class="col-12 col-md-3 text-caption">
+        Email Peserta Didik / Orang Tua *
+      </div>
+      <div class="col-12 col-md-9">
+        <q-input
+          dense
+          outlined
+          v-model="form.email"
+          :rules="email"
+          hide-bottom-space
+          hint="Mohon isi dengan email yang aktif"
+        ></q-input>
+      </div>
+      <!--
         <div class="col-12 col-md-3 text-caption">Password Login *</div>
         <div class="col-12 col-md-9">
           <q-input
@@ -423,6 +440,11 @@ export default defineComponent({
         (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
       ],
       form,
+      onTypeChange(e) {
+        if (e === "Pesantren") form.value.level = "Pesantren";
+        form.value.for_class = undefined;
+        form.value.level = undefined;
+      },
     };
   },
 });

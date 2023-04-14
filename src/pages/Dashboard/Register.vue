@@ -201,6 +201,8 @@ export default {
         Object.assign(form.value, res.data.data);
         form.value.periodic = form.value.periodic || {};
         form.value.student.periode = form.value.periode;
+        form.value.student.type =
+          form.value.student.level === "Pesantren" ? "Pesantren" : "Sekolah";
         form.value.beasiswa = form.value.scholarship?.length > 0 ? 1 : 0;
         loading.value = false;
       });
