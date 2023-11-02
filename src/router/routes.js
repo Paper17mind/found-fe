@@ -38,6 +38,11 @@ const routes = [
         name: "List Pendaftar",
       },
       {
+        path: "/dashboard/categories/:type",
+        component: () => import("pages/Dashboard/Categories.vue"),
+        name: "category",
+      },
+      {
         path: "/dashboard/registrar/:id",
         component: () => import("pages/Dashboard/RegDetail.vue"),
         name: "Detail Pendaftar",
