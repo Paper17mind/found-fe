@@ -38,6 +38,16 @@ const routes = [
         name: "List Pendaftar",
       },
       {
+        path: "/dashboard/list-payment",
+        component: () => import("pages/Dashboard/ListPayment.vue"),
+        name: "List Pembayaran",
+      },
+      {
+        path: "/dashboard/payment",
+        component: () => import("pages/Dashboard/Payment.vue"),
+        name: "Pembayaran",
+      },
+      {
         path: "/dashboard/categories/:type",
         component: () => import("pages/Dashboard/Categories.vue"),
         name: "category",
