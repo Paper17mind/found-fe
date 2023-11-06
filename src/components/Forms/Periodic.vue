@@ -181,12 +181,18 @@ export default defineComponent({
     const semester = computed({
       get: () => {
         const dt = collect(common.$state.info.categories)
+          .where("name", props.item.student.level)
+          .pluck("description")
+          .first();
+        const spl = dt?.split(",")?.length;
+        return Number(spl * 2);
+        /* const dt = collect(common.$state.info.categories)
           .pluck("children")
           .flatten(1)
           .where("name", props.item.student.for_class)
           .pluck("semester")
           .first();
-        return Number(dt);
+        return Number(dt); */
       },
     });
     const show = computed({

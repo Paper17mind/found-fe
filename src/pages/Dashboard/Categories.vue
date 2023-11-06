@@ -13,7 +13,11 @@
         virtual-scroll
       >
         <template #top>
-          <div style="width: 100%" flat class="row q-col-gutter-sm items-center">
+          <div
+            style="width: 100%"
+            flat
+            class="row q-col-gutter-sm items-center"
+          >
             <div class="col-6 col-md-2 text-bold">
               {{ keys[$route.params.type] }}
             </div>
@@ -27,7 +31,7 @@
             />
             <div class="col-6 col-md-4"></div>
             <div class="col-6 col-md-2 text-right">
-              <q-btn
+              <q-btn v-if="$route.params.type !== 'jenjang'"
                 elevation="0"
                 color="primary"
                 dark
@@ -148,7 +152,7 @@ export default defineComponent({
           params: { type: route.params.type },
         })
         .then((res) => {
-          data.value = res.data.data;
+          data.value = res.data.data.filter((x) => x.name !== "Pesantren");
           loading.value = false;
         });
     }
@@ -197,7 +201,7 @@ export default defineComponent({
               align: "left",
             },
             {
-              label: "Nama",
+              label: route.params.type,
               name: "name",
               field: "name",
               sortable: true,
@@ -213,13 +217,6 @@ export default defineComponent({
                 field: "description",
                 sortable: true,
                 align: "left",
-              },
-              {
-                label: "Action",
-                name: "action",
-                field: "action",
-                sortable: true,
-                align: "right",
               },
             ];
           }

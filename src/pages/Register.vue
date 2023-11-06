@@ -54,7 +54,7 @@
           :school="info.name"
         />
       </q-step>
-      <q-step
+      <!-- <q-step
         :name="form.student.level === 'Pesantren' ? 3 : 4"
         :done="form.student.level === 'Pesantren' ? step > 3 : step > 4"
         title="Bayar Formulir"
@@ -66,9 +66,9 @@
           :onBack="onBack"
           :onNext="nextStep"
         />
-      </q-step>
+      </q-step> -->
       <q-step
-        :name="form.student.level === 'Pesantren' ? 4 : 5"
+        :name="form.student.level === 'Pesantren' ? 3 : 4"
         title="Berkas & Persetujuan"
         icon="assignment"
       >
@@ -81,15 +81,15 @@
             </li>
             <li class="text-dark">
               Untuk jenjang SD, foto siswa yang disertakan
-              <strong
-                >merupakan foto formal berukuran 3x4 berwarna dengan background
+              <strong>
+                merupakan foto formal berukuran 3x4 berwarna dengan background
                 polos
               </strong>
             </li>
             <li class="text-dark">
               Untuk jenjang SMP dan SMA, foto siswa yang disertakan
-              <strong
-                >merupakan foto menggunakan seragam sekolah berukuran 3x4
+              <strong>
+                merupakan foto menggunakan seragam sekolah berukuran 3x4
                 berwarna
               </strong>
             </li>
@@ -116,7 +116,7 @@
               v-model="form.report_image"
               hide-bottom-space
             ></q-file>
-            <q-file
+            <!-- <q-file
               class="q-mb-sm"
               outlined
               dense
@@ -124,7 +124,7 @@
               :rules="rules"
               v-model="form.transfer_image"
               hide-bottom-space
-            ></q-file>
+            ></q-file> -->
             <q-checkbox
               label="Saya menyatakan semua data yang disertakan adalah benar."
               :rules="rules"

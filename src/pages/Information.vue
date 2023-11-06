@@ -66,6 +66,21 @@
       <template #loading>
         <q-inner-loading showing color="primary" />
       </template>
+      <template #body-cell-status="{ row }">
+        <q-td>
+          <q-btn
+            v-if="row.status === 'Lulus Berkas'"
+            no-caps
+            size="sm"
+            class="bg-primary text-white"
+            flat
+          >
+            {{ row.status }}
+            <q-tooltip>Klik untuk melakukan daftar ulang</q-tooltip>
+          </q-btn>
+          <span v-else>{{ row.status }}</span>
+        </q-td>
+      </template>
     </q-table>
   </div>
 </template>

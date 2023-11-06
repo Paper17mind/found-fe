@@ -51,10 +51,21 @@
         <template v-if="data.id">
           <div class="col-12 col-md-2 text-bold">Pembayaran</div>
           <div class="col-6 col-md-3">
-            <q-select v-model="form.periode" label="Periode" dense outlined />
+            <q-select
+              :options="categories.filter((x) => x.type === 'periode')"
+              option-label="name"
+              option-value="name"
+              v-model="form.periode"
+              label="Periode"
+              dense
+              outlined
+            />
           </div>
           <div class="col-6 col-md-3">
             <q-select
+              :options="categories.filter((x) => x.type === 'bill')"
+              option-label="name"
+              option-value="id"
               v-model="form.category_id"
               label="Jenis Pembayaran"
               dense
@@ -62,10 +73,18 @@
             />
           </div>
           <div class="col-6 col-md-3">
-            <q-select v-model="form.bill_type" label="Tagihan" dense outlined />
+            <q-select
+              v-model="form.bill_type"
+              :options="bills"
+              label="Tagihan"
+              dense
+              outlined
+            />
           </div>
           <!-- form tagihan -->
-          <div class="col-12 col-md-2 text-bold">Jumlah Tagihan</div>
+          <div class="col-12 col-md-2 text-bold" style="vertical-align:top;">
+            Jumlah Tagihan
+          </div>
           <div class="col-9 col-md-8">
             <q-input
               v-model="form.amount"
@@ -73,10 +92,11 @@
               dense
               outlined
               type="number"
+              :hint="price(form.amount||0)"
             />
           </div>
           <div class="col-3 col-md-2">
-            <q-btn style="width: 100%" color="primary">Buat</q-btn>
+            <q-btn style="width: 100%" class="q-mb-lg" color="primary">Buat</q-btn>
           </div>
         </template>
         <div class="col-12">
@@ -120,7 +140,7 @@
 <script>
 import { api } from "src/boot/axios";
 import { price } from "src/compose/utils";
-import { defineComponent, ref } from "vue";
+import { defineComponent, onMounted, ref } from "vue";
 
 export default defineComponent({
   setup() {
@@ -129,8 +149,15 @@ export default defineComponent({
     });
     const nis = ref("");
     const form = ref({});
+    const categories = ref([]);
     const loading = ref(false);
-
+    function getCategories() {
+      api
+        .get("categories", { params: { types: ["bill", "periode"] } })
+        .then((res) => {
+          categories.value = res.data?.data;
+        });
+    }
     function search() {
       loading.value = true;
       api
@@ -145,6 +172,7 @@ export default defineComponent({
           alert(e.response?.data?.message);
         });
     }
+    onMounted(() => getCategories());
     return {
       data,
       price,
@@ -152,6 +180,10 @@ export default defineComponent({
       nis,
       search,
       loading,
+      categories,
+      bills: Array(12)
+        .fill()
+        .map((x, i) => `Tagihan Ke ${i + 1}`),
     };
   },
 });

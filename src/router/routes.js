@@ -43,6 +43,11 @@ const routes = [
         name: "List Pembayaran",
       },
       {
+        path: "/dashboard/spp-payment",
+        component: () => import("pages/Dashboard/PaymentSpp.vue"),
+        name: "Pembayaran SPP",
+      },
+      {
         path: "/dashboard/payment",
         component: () => import("pages/Dashboard/Payment.vue"),
         name: "Pembayaran",

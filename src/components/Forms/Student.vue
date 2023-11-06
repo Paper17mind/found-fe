@@ -39,7 +39,7 @@
         <q-select
           outlined
           dense
-          :options="info.categories.filter((x) => x.name !== 'Pesantren')"
+          :options="itemJenjang"
           option-label="name"
           option-value="name"
           map-options
@@ -411,14 +411,31 @@ export default defineComponent({
     });
     return {
       info,
+      itemJenjang: computed({
+        get: () => {
+          if (form.value.type === "Sekolah") {
+            return info.value.categories.filter(
+              (x) => ["TK", "SD", "SMP"].indexOf(x.name) > -1
+            );
+          }
+          return info.value.categories.filter(
+            (x) => ["SMA", "SMP"].indexOf(x.name) > -1
+          );
+        },
+      }),
       classes: computed({
         get: () => {
           const collection = collect(info.value.categories);
           if (form.value.level) {
-            return collection
+            /* return collection
               .where("name", "===", form.value.level)
               .pluck("children")
+              .first(); */
+            const desc = collection
+              .where("name", "===", form.value.level)
+              .pluck("description")
               .first();
+            return desc?.split(",");
           }
           return collection.pluck("children").flatten(1).toArray();
         },
