@@ -5,6 +5,12 @@
         :title="`Periode ${data.periode}`"
         :subtitle="data.status"
       >
+        <q-item v-if="data.nis">
+          <q-item-section>
+            <q-item-label>NIS</q-item-label>
+            <q-item-label>{{ data.nis }}</q-item-label>
+          </q-item-section>
+        </q-item>
         <q-item>
           <q-item-section>
             <q-item-label>Status</q-item-label>
@@ -512,7 +518,7 @@
     </q-timeline>
     <!-- <pre> {{ data }} </pre> -->
     <q-dialog v-model="dialog">
-      <img :src="image" style="max-height: 90vh">
+      <img :src="image" style="max-height: 90vh" />
     </q-dialog>
   </div>
 </template>

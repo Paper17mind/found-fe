@@ -133,7 +133,7 @@ export default {
       return formatter.format(number);
     }
     function createVa() {
-      api
+      /* api
         .post("create-va", {
           name: props.form.name,
           phone: props.form.phone,
@@ -143,7 +143,7 @@ export default {
         })
         .then((res) => {
           vaInfo.value = res.data?.data || {};
-        });
+        }); */
     }
     onMounted(() => getInfo());
     return {

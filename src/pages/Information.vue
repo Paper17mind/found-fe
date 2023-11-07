@@ -74,6 +74,7 @@
             size="sm"
             class="bg-primary text-white"
             flat
+            :to="`/register/${row.id}`"
           >
             {{ row.status }}
             <q-tooltip>Klik untuk melakukan daftar ulang</q-tooltip>

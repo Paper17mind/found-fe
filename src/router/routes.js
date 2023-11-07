@@ -10,6 +10,11 @@ const routes = [
         name: "Form Pendaftaran",
       },
       {
+        path: "/register/:id",
+        component: () => import("pages/reRegister.vue"),
+        name: "Form Pendaftaran Ulang",
+      },
+      {
         path: "/information",
         name: "Information",
         component: () => import("pages/Information.vue"),
