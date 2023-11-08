@@ -260,7 +260,7 @@ export default {
           } else fd.append(e, form.value[e]);
         });
         fd.append("periode", form.value.student.periode);
-        fd.append("amount", info.value.fee);
+        fd.append("amount", info.value.fee || 0);
         const { data } = await api.post(`forms`, fd).catch((e) => errNotif(e));
         form.value.id = data.data?.id;
         form.value.student.form_id = data.data?.id;

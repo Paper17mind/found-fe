@@ -2,7 +2,7 @@
   <div>
     <q-form ref="info" class="row q-col-gutter-sm">
       <div class="col-12">
-        <div class="text-h5">Detail Pembelian Formulir Pendaftaran</div>
+        <div class="text-h5">Detail Pembayaran Pendaftaran Ulang</div>
       </div>
       <div class="col-12 col-md-6">
         <div v-for="(x, i) in data" :key="x.id" class="q-mt-md">
@@ -67,13 +67,13 @@
             <div>Total Nominal Yang Perlu dibayarkan</div>
             <div class="text-h5 q-my-md">{{ formatCurrency(fee) }}</div>
             <div>
-              Petunjuk pembelian formulir :
+              Petunjuk pembayaran daftar ulang:
               <ol>
                 <li>
-                  Silahkan melakukan pembelian formulir pendaftaran dengan cara
+                  Silahkan melakukan pembayaran pendaftaran dengan cara
                   melakukan transfer senilai
                   <strong> {{ formatCurrency(fee) }} </strong>, ke salah satu
-                  nomor rekening disamping
+                  nomor rekening disamping / Melalui Virtual Account
                 </li>
                 <li>Foto / scan / screenshoot bukti transfer anda</li>
                 <li>
