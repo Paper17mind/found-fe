@@ -15,7 +15,7 @@ thead tr:first-child th {
 .sticky-table thead tr th {
   position: sticky;
   z-index: 1000;
-  color: var(--q-negative);
+  color: var(--q-black);
   font-size: 10pt;
   background-color: var(--q-positive);
 }

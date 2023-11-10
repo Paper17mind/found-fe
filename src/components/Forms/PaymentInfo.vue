@@ -133,17 +133,9 @@ export default {
       return formatter.format(number);
     }
     function createVa() {
-      /* api
-        .post("create-va", {
-          name: props.form.name,
-          phone: props.form.phone,
-          email: props.form.email,
-          level: props.form.level,
-          address: props.form.address,
-        })
-        .then((res) => {
-          vaInfo.value = res.data?.data || {};
-        }); */
+      api.post("create-va", props.form).then((res) => {
+        vaInfo.value = res.data?.payload || {};
+      });
     }
     onMounted(() => getInfo());
     return {

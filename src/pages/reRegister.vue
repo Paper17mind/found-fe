@@ -46,7 +46,7 @@
       </q-step>
       <q-step :name="2" title="Bayar Formulir" icon="payment">
         <payment-info
-          :form="form.student"
+          :form="form"
           :fee="fee"
           :onBack="onBack"
           :onNext="nextStep"
@@ -98,6 +98,7 @@ import { useQuasar } from "quasar";
 import { api } from "src/boot/axios";
 import PaymentInfo from "src/components/Forms/PaymentInfo.vue";
 import { defineComponent, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
 
 export default defineComponent({
   components: { PaymentInfo },
@@ -105,6 +106,8 @@ export default defineComponent({
     const q = useQuasar();
     const step = ref(1);
     const form = ref({});
+    const route = useRoute();
+    const router = useRouter();
     const field = ref(null);
     const fee = ref(0);
     const rules = [(v) => !!v || "Data tidak boleh kosong"];
@@ -121,12 +124,14 @@ export default defineComponent({
       async checkFee() {
         const v = await field.value.validate();
         if (!v) return;
+        form.value.form_id = route.params.id;
         loading.value = true;
         api
           .post("ppdb-fee", form.value)
           .then((res) => {
             fee.value = res.data.fee;
             step.value = 2;
+            Object.assign(form.value, res.data?.data);
             loading.value = false;
           })
           .catch((e) => {

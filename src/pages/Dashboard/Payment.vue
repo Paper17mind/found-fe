@@ -40,7 +40,7 @@
             </tr>
             <tr>
               <td class="text-bold">PPDB</td>
-              <td colspan="3"></td>
+              <td colspan="3">{{ data.payment_type }}</td>
             </tr>
             <tr>
               <td class="text-bold">Deskripsi</td>
@@ -116,10 +116,10 @@
             <tbody>
               <tr v-for="(x, i) in data.payment_histories" :key="i">
                 <td>{{ i + 1 }}</td>
-                <td></td>
+                <td>{{ x.category }}</td>
                 <td>{{ x.bill_type }}</td>
                 <td>{{ x.periode }}</td>
-                <td>{{ x.updated_at?.substring(0, 10) }}</td>
+                <td>{{ x.payment_date?.substring(0, 10) }}</td>
                 <td>{{ price(x.amount) }}</td>
                 <td>{{ x.status }}</td>
                 <td>
@@ -164,6 +164,7 @@ export default defineComponent({
         .get("/payment-history/" + nis.value)
         .then((res) => {
           data.value = res.data.data;
+          data.value.payment_type = res.data.form?.payment_type;
           data.value.payment_histories = res.data?.histories;
           loading.value = false;
         })

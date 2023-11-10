@@ -66,6 +66,11 @@
       <template #loading>
         <q-inner-loading showing color="primary" />
       </template>
+      <template #body-cell-index="{ row }">
+        <q-td>
+          {{ data.indexOf(row) + 1 }}
+        </q-td>
+      </template>
     </q-table>
   </div>
 </template>
@@ -148,10 +153,11 @@ export default defineComponent({
       },
       {
         label: "Tgl Bayar",
-        name: "updated_at",
-        field: "updated_at",
+        name: "payment_date",
+        field: "payment_date",
         sortable: true,
         align: "left",
+        format: (v) => v?.substring(0, 10),
       },
       {
         label: "Status",
@@ -159,13 +165,13 @@ export default defineComponent({
         field: "status",
         sortable: true,
         align: "left",
-      }
+      },
     ]);
     const data = ref([]);
     const categories = ref([]);
     const levels = ref([]);
     const filter = ref({
-      status: "Lulus Berkas",
+      // status: "Lulus Berkas",
     });
     const periodes = ref([]);
     const page = ref({});
