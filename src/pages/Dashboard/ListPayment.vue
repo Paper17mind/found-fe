@@ -28,7 +28,7 @@
               dense
             />
           </div>
-          <q-select
+          <!-- <q-select
             class="col-4 col-md-3"
             rounded
             filled
@@ -38,6 +38,20 @@
             v-model="filter.type"
             @update:model-value="initialize"
             dense
+          ></q-select> -->
+          <q-select
+            class="col-4 col-md-3"
+            rounded
+            filled
+            clearable
+            :options="categories"
+            option-label="name" option-value="id"
+            label="Filter type"
+            v-model="filter.category_id"
+            emit-value
+            map-options
+            @update:model-value="initialize"
+            dense
           ></q-select>
           <q-select
             class="col-2"
@@ -45,6 +59,10 @@
             filled
             clearable
             :options="periodes"
+            option-label="name"
+            option-value="name"
+            emit-value
+            map-options
             label="Filter Periode"
             v-model="filter.periode"
             @update:model-value="initialize"
@@ -55,7 +73,7 @@
             rounded
             filled
             clearable
-            :options="['SD', 'SMP', 'SMA']"
+            :options="['SD', 'SMP', 'SMA', 'TK']"
             label="Filter Jenjang"
             v-model="filter.level"
             @update:model-value="initialize"
@@ -92,6 +110,20 @@ export default defineComponent({
         label: "No",
         name: "index",
         field: "index",
+        sortable: false,
+        align: "left",
+      },
+      {
+        label: "No. Transaksi",
+        name: "transaction_id",
+        field: "transaction_id",
+        sortable: false,
+        align: "left",
+      },
+      {
+        label: "Jenis",
+        name: "category",
+        field: "category",
         sortable: false,
         align: "left",
       },
@@ -185,13 +217,21 @@ export default defineComponent({
       });
     }
     function getCategories() {
-      api.get("info").then((res) => {
+      /* api.get("info").then((res) => {
         categories.value = res.data.categories;
         levels.value = collect(categories.value)
           .map((x) => x.children[0] ?? {})
           .values()
           .toArray();
-      });
+      }); */
+      api
+        .get("categories", {
+          params: { types: ["bill", "periode"] },
+        })
+        .then((res) => {
+          periodes.value = res.data?.data?.filter((x) => x.type === "periode");
+          categories.value = res.data?.data?.filter((x) => x.type === "bill");
+        });
     }
     function initialize() {
       loading.value = true;
@@ -209,6 +249,7 @@ export default defineComponent({
     }
     onMounted(() => {
       initialize();
+      getCategories();
     });
     // response
     return {

@@ -57,6 +57,8 @@
               option-value="name"
               v-model="form.periode"
               label="Periode"
+              emit-value
+              map-options
               dense
               outlined
             />
@@ -66,6 +68,8 @@
               :options="categories.filter((x) => x.type === 'bill')"
               option-label="name"
               option-value="id"
+              emit-value
+              map-options
               v-model="form.category_id"
               label="Jenis Pembayaran"
               dense
@@ -76,13 +80,15 @@
             <q-select
               v-model="form.bill_type"
               :options="bills"
+              emit-value
+              map-options
               label="Tagihan"
               dense
               outlined
             />
           </div>
           <!-- form tagihan -->
-          <div class="col-12 col-md-2 text-bold" style="vertical-align:top;">
+          <div class="col-12 col-md-2 text-bold" style="vertical-align: top">
             Jumlah Tagihan
           </div>
           <div class="col-9 col-md-8">
@@ -92,11 +98,19 @@
               dense
               outlined
               type="number"
-              :hint="price(form.amount||0)"
+              :hint="price(form.amount || 0)"
             />
           </div>
           <div class="col-3 col-md-2">
-            <q-btn style="width: 100%" class="q-mb-lg" color="primary">Buat</q-btn>
+            <q-btn
+              @click="create"
+              :loading="loading"
+              style="width: 100%"
+              class="q-mb-lg"
+              color="primary"
+            >
+              Buat
+            </q-btn>
           </div>
         </template>
         <div class="col-12">
@@ -123,7 +137,7 @@
                 <td>{{ price(x.amount) }}</td>
                 <td>{{ x.status }}</td>
                 <td>
-                  <q-btn icon="delete" flat color="red"></q-btn>
+                  <!-- <q-btn icon="delete" flat color="red"></q-btn> -->
                 </td>
               </tr>
             </tbody>
@@ -166,11 +180,32 @@ export default defineComponent({
           data.value = res.data.data;
           data.value.payment_type = res.data.form?.payment_type;
           data.value.payment_histories = res.data?.histories;
+          Object.assign(form.value, {
+            student_id: data.value.id,
+            form_id: data.value.form_id,
+            periode: res.data.form?.periode,
+          });
           loading.value = false;
         })
         .catch((e) => {
           loading.value = false;
           alert(e.response?.data?.message);
+        });
+    }
+    function create() {
+      loading.value = true;
+      Object.assign(form.value, {
+        student_id: data.value.id,
+        form_id: data.value.form_id,
+      });
+      api
+        .post("payment-history", form.value)
+        .then((res) => {
+          search();
+        })
+        .catch((e) => {
+          alert(e.response?.data?.message);
+          loading.value = false;
         });
     }
     onMounted(() => getCategories());
@@ -180,6 +215,7 @@ export default defineComponent({
       form,
       nis,
       search,
+      create,
       loading,
       categories,
       bills: Array(12)
