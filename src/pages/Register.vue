@@ -80,18 +80,8 @@
               dengan baik
             </li>
             <li class="text-dark">
-              Untuk jenjang SD, foto siswa yang disertakan
-              <strong>
-                merupakan foto formal berukuran 3x4 berwarna dengan background
-                polos
-              </strong>
-            </li>
-            <li class="text-dark">
-              Untuk jenjang SMP dan SMA, foto siswa yang disertakan
-              <strong>
-                merupakan foto menggunakan seragam sekolah berukuran 3x4
-                berwarna
-              </strong>
+              Foto siswa yang disertakan merupakan foto <strong>formal/berseragam</strong> dengan
+              background logo berdasarkan sekolah masing-masing
             </li>
             <li class="text-dark">
               Ukuran file <strong>maksimal 10 MB </strong>
