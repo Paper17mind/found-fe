@@ -16,12 +16,12 @@
       >
         <div class="row justify-center q-px-sm">
           <div class="col-12 col-md-7 text-center q-mb-md">
-            Silahkan Masukan nomor NIS anda untuk melanjutkan Daftar Ulang
+            Silahkan Masukan nomor NISN anda untuk melanjutkan Daftar Ulang
           </div>
           <q-form class="col-12 col-md-7" ref="field">
             <q-input
               :rules="rules"
-              label="NIS"
+              label="NISN"
               v-model="form.nis"
               dense
               hide-bottom-space
@@ -144,12 +144,14 @@ export default defineComponent({
         if (!v) return;
         loading.value = true;
         const fd = new FormData();
+        fd.append('id', form.value.form_id)
         fd.append("amount", fee.value);
         fd.append("transfer_image", form.value.transfer_image);
         api
           .post("re-register", fd)
           .then((res) => {
             loading.value = false;
+            router.go(-1)
             q.notify({
               message: "Terimakasih sudah melakukan pendaftaran ulang",
             });

@@ -5,7 +5,7 @@
         <div class="text-h5">Detail Pembayaran Pendaftaran Ulang</div>
       </div>
       <div class="col-12 col-md-6">
-        <div v-for="(x, i) in data" :key="x.id" class="q-mt-md">
+        <!-- <div v-for="(x, i) in data" :key="x.id" class="q-mt-md">
           <div style="font-size: 20; font-weight: bold">
             {{ i == 0 ? "Transfer Ke:" : "Atau" }}
           </div>
@@ -27,10 +27,10 @@
               </tr>
             </tbody>
           </table>
-        </div>
+        </div> -->
         <q-separator spaced="md" />
         <q-item v-if="!vaInfo.va" dense class="q-px-none q-mt-md">
-          <q-item-section class="text-bold"> Atau </q-item-section>
+          <q-item-section class="text-bold">  </q-item-section>
           <q-item-section side>
             <q-btn @click="createVa" color="primary" outline no-caps>
               Bayar dengan Virtual Akun
@@ -72,8 +72,7 @@
                 <li>
                   Silahkan melakukan pembayaran pendaftaran dengan cara
                   melakukan transfer senilai
-                  <strong> {{ formatCurrency(fee) }} </strong>, ke salah satu
-                  nomor rekening disamping / Melalui Virtual Account
+                  <strong> {{ formatCurrency(fee) }} </strong>,  Melalui Virtual Account
                 </li>
                 <li>Foto / scan / screenshoot bukti transfer anda</li>
                 <li>

@@ -33,7 +33,7 @@
             rounded
             filled
             clearable
-            :options="['Sekolah','Pesantren']"
+            :options="['Sekolah', 'Pesantren']"
             label="Filter type"
             v-model="filter.type"
             @update:model-value="initialize"
@@ -272,10 +272,17 @@ export default defineComponent({
     const valid = ref(true);
     const headers = ref([
       {
-        label: "Kode",
-        name: "code",
-        field: "code",
-        sortable: false,
+        label: "NIS",
+        name: "nis",
+        field: "nis",
+        sortable: true,
+        align: "left",
+      },
+      {
+        label: "NISN",
+        name: "nisn",
+        field: "nisn",
+        sortable: true,
         align: "left",
       },
       {
@@ -283,6 +290,13 @@ export default defineComponent({
         name: "name",
         field: "name",
         sortable: true,
+        align: "left",
+      },
+      {
+        label: "Kode",
+        name: "code",
+        field: "code",
+        sortable: false,
         align: "left",
       },
       {
@@ -338,13 +352,6 @@ export default defineComponent({
         label: "Asal Sekolah",
         name: "from_school",
         field: "from_school",
-        sortable: true,
-        align: "left",
-      },
-      {
-        label: "Nis",
-        name: "nis",
-        field: "nis",
         sortable: true,
         align: "left",
       },

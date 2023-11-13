@@ -194,9 +194,9 @@ export default defineComponent({
         get: () => {
           const h = [
             {
-              label: "No",
-              name: "no",
-              field: "no",
+              label: "ID",
+              name: "id",
+              field: "id",
               sortable: true,
               align: "left",
             },
