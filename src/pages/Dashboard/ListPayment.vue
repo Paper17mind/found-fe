@@ -45,7 +45,8 @@
             filled
             clearable
             :options="categories"
-            option-label="name" option-value="id"
+            option-label="name"
+            option-value="id"
             label="Filter type"
             v-model="filter.category_id"
             emit-value
@@ -114,9 +115,16 @@ export default defineComponent({
         align: "left",
       },
       {
-        label: "No. Transaksi",
+        label: "ID. Transaksi",
         name: "transaction_id",
         field: "transaction_id",
+        sortable: false,
+        align: "left",
+      },
+      {
+        label: "No. Tagihan",
+        name: "bill_code",
+        field: "bill_code",
         sortable: false,
         align: "left",
       },
@@ -204,6 +212,7 @@ export default defineComponent({
     const levels = ref([]);
     const filter = ref({
       // status: "Lulus Berkas",
+      // periode: "",
     });
     const periodes = ref([]);
     const page = ref({});

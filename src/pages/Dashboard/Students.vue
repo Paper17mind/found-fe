@@ -293,13 +293,6 @@ export default defineComponent({
         align: "left",
       },
       {
-        label: "Kode",
-        name: "code",
-        field: "code",
-        sortable: false,
-        align: "left",
-      },
-      {
         label: "Sekolah/Pesantren",
         name: "type",
         field: "type",
@@ -367,6 +360,13 @@ export default defineComponent({
         name: "email",
         field: "email",
         sortable: true,
+        align: "left",
+      },
+      {
+        label: "Kode",
+        name: "code",
+        field: "code",
+        sortable: false,
         align: "left",
       },
       { label: "Actions", name: "actions", field: "actions", align: "right" },
