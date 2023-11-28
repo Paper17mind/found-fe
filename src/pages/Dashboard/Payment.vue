@@ -22,7 +22,7 @@
           <table class="tbl-student" border="1">
             <tr>
               <td class="text-bold" style="width: 200px">Nomor Induk Siswa</td>
-              <td colspan="3">{{ data.nis }}</td>
+              <td colspan="3">{{ form.nis }}</td>
             </tr>
             <tr>
               <td class="text-bold">Nama Siswa</td>
@@ -184,6 +184,7 @@ export default defineComponent({
             student_id: data.value.id,
             form_id: data.value.form_id,
             periode: res.data.form?.periode,
+            nis: res.data.form?.nis,
           });
           loading.value = false;
         })

@@ -12,7 +12,7 @@ const api = axios.create({
   // baseURL: "https://dbiis.org/ppdb/backend/api",
   baseURL: process.env.DEBUGGING
     ? "http://localhost:8000/api"
-    : "https://dbiis.org/ppdb/backend/api",
+    : "https://dibis.org/ppdb/backend/api",
 });
 
 export default boot(({ app }) => {

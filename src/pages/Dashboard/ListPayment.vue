@@ -114,13 +114,13 @@ export default defineComponent({
         sortable: false,
         align: "left",
       },
-      {
+      /*{
         label: "ID. Transaksi",
         name: "transaction_id",
         field: "transaction_id",
         sortable: false,
         align: "left",
-      },
+      },*/
       {
         label: "No. Tagihan",
         name: "bill_code",

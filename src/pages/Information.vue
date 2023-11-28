@@ -163,7 +163,7 @@ export default defineComponent({
       if (periodes.value.length == 0) {
         const prd = await api.get("periode"); //.then((res) => (periodes.value = res.data));
         periodes.value = prd?.data;
-        filter.value.periode = collect(periodes.value).last();
+        // filter.value.periode = collect(periodes.value).last();
       }
       api.get("milestone", { params: filter.value }).then((res) => {
         data.value = res.data.data;
