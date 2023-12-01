@@ -1,5 +1,8 @@
 <template>
-  <router-view />
+  <div>
+    <!-- <q-ajax-bar color="green"></q-ajax-bar> -->
+    <router-view />
+  </div>
 </template>
 
 <script>

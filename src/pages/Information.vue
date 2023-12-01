@@ -55,7 +55,10 @@
             rounded
             filled
             clearable
-            :options="['SD', 'SMP', 'SMA', 'Pesantren']"
+            :options="levels"
+            option-label="name"
+            option-value="name"
+            emit-value map-options
             label="Filter Jenjang"
             v-model="filter.level"
             @update:model-value="getData"
@@ -97,6 +100,7 @@ export default defineComponent({
   setup() {
     const data = ref([]);
     const periodes = ref([]);
+    const levels = ref([]);
     const filter = ref({});
     const page = ref({});
     const loading = ref(false);
@@ -161,8 +165,9 @@ export default defineComponent({
     ];
     async function getData() {
       if (periodes.value.length == 0) {
-        const prd = await api.get("periode"); //.then((res) => (periodes.value = res.data));
-        periodes.value = prd?.data;
+        const prd = await api.get("info"); //.then((res) => (periodes.value = res.data));
+        periodes.value = prd.data?.periode;
+        levels.value = prd.data?.categories;
         // filter.value.periode = collect(periodes.value).last();
       }
       api.get("milestone", { params: filter.value }).then((res) => {
@@ -181,6 +186,7 @@ export default defineComponent({
       loading,
       filter,
       status,
+      levels,
       periodes,
       getData,
       onScroll({ to, ref }) {

@@ -319,6 +319,13 @@
         ></q-input>
       </div>
       <!--  -->
+      <template v-if="showNis">
+        <div class="col-12 col-md-3 text-caption">NIS *</div>
+        <div class="col-12 col-md-9">
+          <q-input dense outlined v-model="nis_user"></q-input>
+        </div>
+      </template>
+      <!--  -->
       <div class="col-12 col-md-3 text-caption">NISN *</div>
       <div class="col-12 col-md-9">
         <q-input dense outlined v-model="form.nis"></q-input>
@@ -396,9 +403,11 @@ import { computed, defineComponent, ref } from "vue";
 export default defineComponent({
   props: {
     item: Object,
+    showNis: Boolean,
     onNext: Function,
+    nis: String,
   },
-  emits: ["change"],
+  emits: ["change", "changeNis"],
   setup(props, { emit }) {
     const common = useCommon();
     const info = computed({
@@ -409,8 +418,13 @@ export default defineComponent({
       get: () => props.item,
       set: (v) => emit("change", v),
     });
+    const nis_user = computed({
+      get: () => props.nis,
+      set: (v) => emit("changeNis", v),
+    });
     return {
       info,
+      nis_user,
       itemJenjang: computed({
         get: () => {
           if (form.value.type === "Sekolah") {

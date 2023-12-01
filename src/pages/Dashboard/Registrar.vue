@@ -66,7 +66,7 @@
             rounded
             filled
             clearable
-            :options="['SD', 'SMP', 'SMA']"
+            :options="levels"
             label="Filter Jenjang"
             v-model="filter.level"
             @update:model-value="initialize"
@@ -255,6 +255,7 @@ export default defineComponent({
     const editedItem = ref({});
     const filter = ref({});
     const periodes = ref([]);
+    const levels = ref([]);
     // methods
     function notif(title, color, e) {
       $q.notify({
@@ -280,7 +281,10 @@ export default defineComponent({
         })
         .catch((e) => notif("Error :(", "red", e));
       if (periodes.value.length == 0) {
-        api.get("periode").then((res) => (periodes.value = res.data));
+        api.get("info").then((res) => {
+          levels.value = res.data?.categories?.map((x) => x.name);
+          periodes.value = res.data?.periode;
+        });
       }
     }
 
@@ -353,6 +357,7 @@ export default defineComponent({
       editedItem,
       filter,
       periodes,
+      levels,
       status,
       //computed
       formTitle: computed({

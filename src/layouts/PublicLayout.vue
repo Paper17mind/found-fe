@@ -2,7 +2,7 @@
   <q-layout view="lHh Lpr lFf">
     <q-header>
       <q-toolbar class="q-pl-none">
-        <a class="q-px-sm m-3" href="https://dbiis.org">
+        <a class="q-px-sm m-3" href="https://dibis.org">
           <img :src="info.logo" style="height: 50px" href="https://dbiis.org/" />
         </a>
         <q-space />
@@ -24,8 +24,6 @@
         </q-btn> -->
       </q-toolbar>
     </q-header>
-    <q-ajax-bar color="secondary"></q-ajax-bar>
-
     <q-page-container>
       <router-view />
     </q-page-container>

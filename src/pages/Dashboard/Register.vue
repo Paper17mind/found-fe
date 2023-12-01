@@ -5,6 +5,7 @@
       ref="stepper"
       alternative-labels
       color="primary"
+      header-nav
       flat
       animated
     >
@@ -17,6 +18,9 @@
         <student
           :onNext="nextStep"
           :item="form.student"
+          :showNis="true"
+          :nis="form.nis"
+          @changeNis="form.nis = $event"
           @change="form.student = $event"
         />
       </q-step>
@@ -244,7 +248,10 @@ export default {
         });
         fd.append("periode", form.value.student.periode);
         fd.append("amount", info.value.fee);
-        const { data } = await api.post(`forms`, fd).catch((e) => errNotif(e));
+        const { data } = await api.post(`forms`, fd).catch((e) => {
+          errNotif(e);
+          step.value = 1;
+        });
         form.value.id = data.data?.id;
         form.value.student.form_id = data.data?.id;
         form.value.form_parent.form_id = data.data?.id;

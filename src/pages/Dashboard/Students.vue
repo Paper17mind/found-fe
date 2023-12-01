@@ -55,7 +55,7 @@
             rounded
             filled
             clearable
-            :options="['SD', 'SMP', 'SMA']"
+            :options="levels"
             label="Filter Jenjang"
             v-model="filter.level"
             @update:model-value="initialize"
@@ -392,13 +392,7 @@ export default defineComponent({
       });
     }
     function getCategories() {
-      api.get("info").then((res) => {
-        categories.value = res.data.categories;
-        levels.value = collect(categories.value)
-          .map((x) => x.children[0] ?? {})
-          .values()
-          .toArray();
-      });
+
     }
     function initialize() {
       loading.value = true;
@@ -415,7 +409,10 @@ export default defineComponent({
         .catch((e) => notif("Error :(", "red", e));
 
       if (periodes.value.length == 0) {
-        api.get("periode").then((res) => (periodes.value = res.data));
+        api.get("info").then((res) => {
+          levels.value = res.data?.categories?.map((x) => x.name);
+          periodes.value = res.data?.periode;
+        });
       }
     }
 
@@ -476,7 +473,6 @@ export default defineComponent({
     }
     onMounted(() => {
       initialize();
-      getCategories();
     });
     // response
     return {
